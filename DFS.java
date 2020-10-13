@@ -103,11 +103,11 @@ public class DFS {
                 String nodeName = String.format("%C%d", j, i);
                 Node temp = new Node(nodeName);
                 nodesList.add(temp);
-                System.out.println(temp.getName());
+                //System.out.println(temp.getName());
             }
         }
 
-        // FIXME: manually add in the spots that should be '1' in adjacency matrix
+        // Add in the spots that should be '1' in adjacency matrix
         // The stupid complicated for loop parameters are just keeping the index in bounds on the edges
         for (int i = 0; i < adjacency_matrix.length; i++) {
             if (i > 15)
@@ -558,8 +558,7 @@ public class DFS {
         adjacency_matrix[251][234] = 0;
         adjacency_matrix[251][250] = 0;
 
-
-        printMatrix(adjacency_matrix);
+        //printMatrix(adjacency_matrix);
 
         // Get starting point from the user
         Scanner scan = new Scanner(System.in);
@@ -584,36 +583,5 @@ public class DFS {
                 dfs.dfsUsingStack(adjacency_matrix, node);
             }   
         });
-
-		// int adjacency_matrix[][] = {
-		// 		{0,1,1,0,0,0,0},  // Node 1: 40
-		// 		{0,0,0,1,0,0,0},  // Node 2 :10
-		// 		{0,1,0,1,1,1,0},  // Node 3: 20
-		// 		{0,0,0,0,1,0,0},  // Node 4: 30
-		// 		{0,0,0,0,0,0,1},  // Node 5: 60
-		// 		{0,0,0,0,0,0,1},  // Node 6: 50
-		// 		{0,0,0,0,0,0,0},  // Node 7: 70
-		// };
- 
-		// DFS dfs = new DFS();
-
-		// System.out.println("The DFS traversal of the graph using stack ");
-		// dfs.dfsUsingStack(adjacency_matrix, A1);
- 
-		// System.out.println();
- 
-		// clearVisitedFlags();
- 
-		// System.out.println("The DFS traversal of the graph using recursion ");
-		// dfs.dfs(adjacency_matrix, A1);
- 
-        
-	}
- 
-	public static void clearVisitedFlags()
-	{
-		for (int i = 0; i < nodesList.size(); i++) {
-			nodesList.get(i).setVisited(false);
-		}
 	}
 }
