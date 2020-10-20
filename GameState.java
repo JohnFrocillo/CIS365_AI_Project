@@ -18,7 +18,9 @@ public class GameState {
     public int enemyThorClickNumber;
 
     // Stats and powers for each figure at different click numbers
-        // Should each piece have its own class to hold all their info?
+    CaptainAmerica friendlyCaptainAmerica = new CaptainAmerica();
+    // set or get whatever is needed for Cap here
+    // Make classes for Thor and Iron Man here
 
     // How many points each figure is worth
         // Again this might be best in the figure's own class?
@@ -37,14 +39,7 @@ public class GameState {
     // Approximate time left on game clock
     public double timeLeftInGame;
 
-    // Action tokens for each figure (how many each figure currently has)
-        // Again this might be best in the figure's own class?
-    public int friendlyCaptainAmericaActionTokens;
-    public int friendlyIronManActionTokens;
-    public int friendlyThorActionTokens;
-    public int enemyCaptainAmericaActionTokens;
-    public int enemyIronManActionTokens;
-    public int enemyThorActionTokens;
+    // Action tokens for each figure is tracked in the character's class
 
     // Was Captain America carried?
         // Again this might be best in the figure's own class
