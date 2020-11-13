@@ -20,7 +20,8 @@ public class GameState {
     // Stats and powers for each figure at different click numbers
     CaptainAmerica friendlyCaptainAmerica = new CaptainAmerica();
     // set or get whatever is needed for Cap here
-    // Make classes for Thor and Iron Man here
+    Thor friendlyThor = new Thor();
+    IronMan friendlyIronMan = new  IronMan();
 
     // How many points each figure is worth
         // Again this might be best in the figure's own class?
