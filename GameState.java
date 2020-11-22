@@ -1,5 +1,8 @@
 public class GameState {
 
+    // empty constructor
+    public GameState() {}
+
     // Location of each of the pieces Ex: "A1"
     public String friendlyCaptainAmericaLocation;
     public String friendlyIronManLocation;
@@ -22,12 +25,6 @@ public class GameState {
     // set or get whatever is needed for Cap here
     Thor friendlyThor = new Thor();
     IronMan friendlyIronMan = new  IronMan();
-
-    // How many points each figure is worth
-        // Again this might be best in the figure's own class?
-    public int captainAmericaPointValue;
-    public int ironManPointValue;
-    public int thorPointValue;
     
     // Total points KO'd for each side
     public int friendlyPoints;
