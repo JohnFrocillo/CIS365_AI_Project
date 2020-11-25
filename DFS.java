@@ -223,6 +223,7 @@ public class DFS {
         adjacency_matrix[7][8] = 0;
         adjacency_matrix[8][7] = 0;
         adjacency_matrix[7][24] = 0;
+        adjacency_matrix[19][36] = 0;
         adjacency_matrix[24][7] = 0;
         adjacency_matrix[23][24] = 0;
         adjacency_matrix[24][23] = 0;
@@ -269,6 +270,7 @@ public class DFS {
         adjacency_matrix[43][60] = 0;
         adjacency_matrix[44][43] = 0;
         adjacency_matrix[44][59] = 0;
+        adjacency_matrix[49][66] = 0;
 
         adjacency_matrix[50][66] = 0;
         adjacency_matrix[50][67] = 0;
@@ -663,6 +665,10 @@ public class DFS {
         nodesList.forEach((node) -> {
             if (node.getName().equals(start)) {
                 //System.out.println(node.getName() + " will be the start node.\n\nHere is the result:");
+
+                /*ArrayList<Node> list = dfs.findNeighbours(adjacency_matrix, node);
+                for (Node n : list)
+                    System.out.print(n.getName() + " ");*/
 
                 //dfs.dfsUsingStack(adjacency_matrix, node);
                 ArrayList<Node> route = dfs.AStar(adjacency_matrix, node);

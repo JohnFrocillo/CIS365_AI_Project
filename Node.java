@@ -51,11 +51,11 @@ public class Node {
     }
 
     public int getX() {
-        return ((int)name.charAt(0) - 65) * 16;
+        return (int)name.charAt(0) - 65;
     }
 
     public int getY() {
-        return Integer.parseInt(name.substring(1)) - 1;
+        return 16 * (Integer.parseInt(name.substring(1)) - 1);
     }
 
     @Override
