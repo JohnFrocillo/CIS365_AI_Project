@@ -1,9 +1,11 @@
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Stack;
- 
-public class DFS { 
- 
+
+public class DFS {
+
     static ArrayList<Node> nodesList = new ArrayList<>();
     private static String goal;
 
@@ -47,6 +49,7 @@ public class DFS {
     // Iterative DFS using stack
     public void dfsUsingStack(int adjacency_matrix[][], Node node) {
         Stack<Node> stack = new Stack<>();
+        HashMap<String, String> trace = new HashMap<>();
         stack.add(node);
 
         while (!stack.isEmpty()) {
@@ -65,9 +68,90 @@ public class DFS {
                 Node n = neighbours.get(i);
                 if (n != null && !n.getVisited()) {
                     stack.add(n);
+                    trace.put(n.getName(), element.getName());
                 }
             }
         }
+
+        String current = goal;
+        while (current != null) {
+            System.out.println(current);
+            current = trace.get(current);
+        }
+    }
+
+    /**
+     * Astar pathfinding implementation
+     * assisted by: https://github.com/psikoi/AStar-Pathfinding
+     * @param adjacency_matrix adjacency matrix for the graph to path-find
+     * @param start Node to begin path-finding on
+     * @return Back-traced path from end to start
+     */
+    public ArrayList<Node> AStar(int adjacency_matrix[][], Node start) {
+        if (start.getName() == goal) {
+            return new ArrayList<>();
+        }
+
+        ArrayList<Node> open = new ArrayList<>();
+        ArrayList<Node> closed = new ArrayList<>();
+
+        open.add(start);
+
+        while (!open.isEmpty()) {
+            Node cur = getLowestCost(open);
+
+            if (cur.getName().equals(goal)) {
+                return retrace(cur);
+            }
+
+            open.remove(cur);
+            closed.add(cur);
+
+            for (Node n : findNeighbours(adjacency_matrix, cur)) {
+                if (closed.contains(n)) continue;
+
+                int score = cur.getCost() + distance(cur, n);
+
+                if (open.contains(n)) {
+                    if (score < n.getCost()) {
+                        n.setCost(score);
+                        n.setParent(cur);
+                    }
+                } else {
+                    n.setCost(score);
+                    open.add(n);
+                    n.setParent(cur);
+                }
+            }
+        }
+
+        return new ArrayList<>();
+    }
+
+    private int distance(Node a, Node b) {
+        return (int)Math.sqrt((a.getX() - b.getX()) * (a.getX() - b.getX()) +
+                              (a.getY() - b.getY()) * (a.getY() - b.getY()));
+    }
+
+    private ArrayList<Node> retrace(Node n) {
+        Node temp = n;
+        ArrayList<Node> trace = new ArrayList<>();
+        trace.add(n);
+
+        while (temp.getParent() != null) {
+            trace.add(temp.getParent());
+            temp = temp.getParent();
+        }
+
+        return trace;
+    }
+
+    private Node getLowestCost(ArrayList<Node> nodes) {
+        Node min = nodes.get(0);
+        for (Node n : nodes)
+            if (n.getCost() < min.getCost())
+                min = n;
+        return min;
     }
 
     private static void printMatrix(int matrix[][]) {
@@ -139,6 +223,7 @@ public class DFS {
         adjacency_matrix[7][8] = 0;
         adjacency_matrix[8][7] = 0;
         adjacency_matrix[7][24] = 0;
+        adjacency_matrix[19][36] = 0;
         adjacency_matrix[24][7] = 0;
         adjacency_matrix[23][24] = 0;
         adjacency_matrix[24][23] = 0;
@@ -185,6 +270,7 @@ public class DFS {
         adjacency_matrix[43][60] = 0;
         adjacency_matrix[44][43] = 0;
         adjacency_matrix[44][59] = 0;
+        adjacency_matrix[49][66] = 0;
 
         adjacency_matrix[50][66] = 0;
         adjacency_matrix[50][67] = 0;
@@ -448,7 +534,7 @@ public class DFS {
         adjacency_matrix[174][158] = 0;
         adjacency_matrix[174][173] = 0;
         adjacency_matrix[174][189] = 0;
-        
+
         adjacency_matrix[177][162] = 0;
         adjacency_matrix[177][178] = 0;
         adjacency_matrix[178][161] = 0;
@@ -474,7 +560,7 @@ public class DFS {
         adjacency_matrix[189][206] = 0;
         adjacency_matrix[190][173] = 0;
         adjacency_matrix[190][189] = 0;
-        
+
         adjacency_matrix[193][178] = 0;
         adjacency_matrix[194][178] = 0;
         adjacency_matrix[195][180] = 0;
@@ -548,7 +634,7 @@ public class DFS {
         adjacency_matrix[234][251] = 0;
         adjacency_matrix[235][234] = 0;
         adjacency_matrix[235][250] = 0;
-        
+
         adjacency_matrix[247][232] = 0;
         adjacency_matrix[247][248] = 0;
         adjacency_matrix[248][231] = 0;
@@ -573,15 +659,23 @@ public class DFS {
         System.out.println("You have selected to start at " + start + " and end at " + end + ".");
 
         goal = end;
-        DFS dfs = new DFS();
+        tutoring.DFS dfs = new tutoring.DFS();
 
         // Find the node specified by the user to start the Algorithm at
         nodesList.forEach((node) -> {
             if (node.getName().equals(start)) {
-                System.out.println(node.getName() + " will be the start node.\n\nHere is the result:");
+                //System.out.println(node.getName() + " will be the start node.\n\nHere is the result:");
 
-                dfs.dfsUsingStack(adjacency_matrix, node);
-            }   
+                /*ArrayList<Node> list = dfs.findNeighbours(adjacency_matrix, node);
+                for (Node n : list)
+                    System.out.print(n.getName() + " ");*/
+
+                //dfs.dfsUsingStack(adjacency_matrix, node);
+                ArrayList<Node> route = dfs.AStar(adjacency_matrix, node);
+                for (Node n : route) {
+                    System.out.print(n.getName() + " ");
+                }
+            }
         });
-	}
+    }
 }
