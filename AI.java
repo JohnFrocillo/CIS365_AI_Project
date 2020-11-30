@@ -241,7 +241,7 @@ public class AI {
                 // BEFORE MOVING, MAKE SURE THE SPOT IS NOT OCCUPIED
                 // Go for enemy Captain America first; he is the weakest
                 String end = gs.enemyCaptainAmericaLocation;
-                dfs.aStar(start, end);
+                dfs.aStar(start, end, true);
                 // If out of range, get as close as possible using A*
                 if (dfs.route.size() > gs.friendlyCaptainAmerica.getRangeValue()) {
                     if (dfs.route.size() >= gs.friendlyCaptainAmerica.getSpeedValue()) {

@@ -54,7 +54,7 @@ public class Node {
     }
 
     public int getY() {
-        return 16 * (Integer.parseInt(name.substring(1)) - 1);
+        return (Integer.parseInt(name.substring(1)) - 1);
     }
 
     @Override

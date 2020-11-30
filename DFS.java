@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,7 +9,8 @@ public class DFS {
     static ArrayList<Node> nodesList = new ArrayList<>();
     public static String goal;
     // instantiate matrix
-    int adjacency_matrix[][] = new int[256][256];
+    private int adjacency_matrix[][] = new int[256][256];
+    private boolean water_tiles[] = new boolean[256];
 
     // find neighbors of node using adjacency matrix
     // if adjacency_matrix[i][j]==1, then nodes at index i and index j are connected
@@ -88,9 +88,10 @@ public class DFS {
      * assisted by: https://github.com/psikoi/AStar-Pathfinding
      * @param adjacency_matrix adjacency matrix for the graph to path-find
      * @param start Node to begin path-finding on
-     * @return Back-traced path from end to start
+     * @param considerWater water tiles have higher cost than normal
+     * @return Back-traced path ArrayList from end to start
      */
-    public ArrayList<Node> AStar(int adjacency_matrix[][], Node start) {
+    public ArrayList<Node> AStar(int adjacency_matrix[][], Node start, boolean considerWater) {
         if (start.getName() == goal) {
             return new ArrayList<>();
         }
@@ -114,6 +115,9 @@ public class DFS {
                 if (closed.contains(n)) continue;
 
                 int score = cur.getCost() + distance(cur, n);
+                if (considerWater && isWater(n)) {
+                    score += 5;
+                }
 
                 if (open.contains(n)) {
                     if (score < n.getCost()) {
@@ -171,6 +175,24 @@ public class DFS {
             }
             System.out.println();
         }
+    }
+
+    /**
+     * Checks if a node has water.
+     * @param n node to check
+     * @return true if node has water on it.
+     */
+    public boolean isWater(Node n) {
+        return water_tiles[n.getY() * 16 + n.getX()];
+    }
+
+    /**
+     * Checks if a node has water.
+     * @param i tile number
+     * @return true if node has water on it.
+     */
+    public boolean isWater(int i) {
+        return water_tiles[i];
     }
 
     public DFS() {
@@ -645,6 +667,66 @@ public class DFS {
         adjacency_matrix[251][234] = 0;
         adjacency_matrix[251][250] = 0;
 
+        // Water (all tiles default to false)
+        water_tiles[4] = true;
+        water_tiles[5] = true;
+        water_tiles[6] = true;
+        water_tiles[9] = true;
+        water_tiles[10] = true;
+        water_tiles[11] = true;
+
+        water_tiles[22] = true;
+        water_tiles[25] = true;
+
+        water_tiles[38] = true;
+        water_tiles[39] = true;
+        water_tiles[40] = true;
+        water_tiles[41] = true;
+
+        water_tiles[55] = true;
+        water_tiles[56] = true;
+
+        water_tiles[71] = true;
+        water_tiles[72] = true;
+
+        water_tiles[87] = true;
+
+        water_tiles[102] = true;
+        water_tiles[103] = true;
+        water_tiles[104] = true;
+
+        water_tiles[116] = true;
+        water_tiles[118] = true;
+        water_tiles[121] = true;
+
+        water_tiles[132] = true;
+        water_tiles[133] = true;
+        water_tiles[134] = true;
+        water_tiles[137] = true;
+
+        water_tiles[147] = true;
+        water_tiles[148] = true;
+        water_tiles[151] = true;
+        water_tiles[152] = true;
+        water_tiles[153] = true;
+
+        water_tiles[163] = true;
+        water_tiles[168] = true;
+
+        water_tiles[168] = true;
+        water_tiles[168] = true;
+
+        water_tiles[179] = true;
+        water_tiles[185] = true;
+
+        water_tiles[201] = true;
+
+        water_tiles[217] = true;
+        water_tiles[218] = true;
+        water_tiles[219] = true;
+
+        water_tiles[235] = true;
+
         //printMatrix(adjacency_matrix);
 
         // Get starting point from the user
@@ -667,7 +749,7 @@ public class DFS {
 
     ArrayList<Node> route;
     
-    public void aStar(String start, String end) {
+    public void aStar(String start, String end, boolean water) {
         goal = end;
         // Find the node specified by the user to start the Algorithm at
         nodesList.forEach((node) -> {
@@ -679,7 +761,7 @@ public class DFS {
                     System.out.print(n.getName() + " ");*/
 
                 //dfs.dfsUsingStack(adjacency_matrix, node);
-                route = this.AStar(this.adjacency_matrix, node);
+                route = this.AStar(this.adjacency_matrix, node, water);
                 // Reverse to get traverse path
                 Collections.reverse(route);
 
