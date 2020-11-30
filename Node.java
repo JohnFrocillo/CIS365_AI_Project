@@ -1,27 +1,26 @@
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Node {
     private String name;
-    private boolean             isVisited;
-    private List<tutoring.Node> children;
+    private boolean isVisited;
+    private List<Node> children;
 
     // This is for A*
-    private int           cost;
-    private tutoring.Node parent = null;
+    private int cost;
+    private Node parent = null;
 
     public Node (String name) {
         this.name = name;
-        this.children = new ArrayList<tutoring.Node>();
+        this.children = new ArrayList<Node>();
         this.cost = 0;
     }
-    public tutoring.Node getParent()
+    public Node getParent()
     {
         return parent;
     }
 
-    public void setParent(tutoring.Node parent)
+    public void setParent(Node parent)
     {
         this.parent = parent;
     }
@@ -40,13 +39,13 @@ public class Node {
     public boolean getVisited() {
         return isVisited;
     }
-    public List<tutoring.Node> getChildren() {
+    public List<Node> getChildren() {
         return children;
     }
     public void setVisited(boolean isVisited) {
         this.isVisited = isVisited;
     }
-    public void addChild (tutoring.Node child) {
+    public void addChild (Node child) {
         this.children.add(child);
     }
 
@@ -66,6 +65,6 @@ public class Node {
     @Override
     public boolean equals(Object obj)
     {
-        return this.getName().equals(((tutoring.Node) obj).getName());
+        return this.getName().equals(((Node) obj).getName());
     }
 }

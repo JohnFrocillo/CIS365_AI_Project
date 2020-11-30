@@ -42,4 +42,17 @@ public class GameState {
     // Was Captain America carried?
         // Again this might be best in the figure's own class
     public boolean captainAmericaWasCarried;
+
+    @Override
+    public String toString() {
+        String returnValue = "";
+        returnValue += "Friendly Captain America: Click Number, Location:  " + friendlyCaptainAmericaClickNumber + " " + friendlyCaptainAmericaLocation + "\n";
+        returnValue += "Friendly Iron Man: Click Number, Location:  " + friendlyIronManClickNumber + " " + friendlyIronManLocation + "\n";
+        returnValue += "Friendly Thor: Click number, Location:  " + friendlyThorClickNumber + " " + friendlyThorLocation + "\n";
+        returnValue += "Enemy Captain America: Click Number, Location:  " + enemyCaptainAmericaClickNumber + " " + enemyCaptainAmericaLocation + "\n";
+        returnValue += "Enemy Iron Man: Click Number, Location:  " + enemyIronManClickNumber + " " + enemyIronManLocation + "\n";
+        returnValue += "Enemy Thor: Click Number, Location:  " + enemyThorClickNumber + " " + enemyThorLocation + "\n";
+    
+        return returnValue;
+    }
 }

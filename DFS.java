@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Stack;
@@ -7,7 +8,9 @@ import java.util.Stack;
 public class DFS {
 
     static ArrayList<Node> nodesList = new ArrayList<>();
-    private static String goal;
+    public static String goal;
+    // instantiate matrix
+    int adjacency_matrix[][] = new int[256][256];
 
     // find neighbors of node using adjacency matrix
     // if adjacency_matrix[i][j]==1, then nodes at index i and index j are connected
@@ -170,10 +173,8 @@ public class DFS {
         }
     }
 
-    public static void main(String arg[]) {
-
-        // instantiate matrix
-        int adjacency_matrix[][] = new int[256][256];
+    public DFS() {
+        nodesList = new ArrayList<>();
 
         for (int i = 0; i <= 255; i++) {
             for (int j = 0; j <= 255; j++) {
@@ -647,20 +648,27 @@ public class DFS {
         //printMatrix(adjacency_matrix);
 
         // Get starting point from the user
-        Scanner scan = new Scanner(System.in);
-        System.out.println("What is the starting point? ");
-        String start = scan.next();
+        // Scanner scan = new Scanner(System.in);
+        // System.out.println("What is the starting point? ");
+        // String start = scan.next();
 
-        // Get the goal from the user
-        System.out.println("What is the destination? ");
-        String end = scan.next();
-        scan.close();
+        // // Get the goal from the user
+        // System.out.println("What is the destination? ");
+        // String end = scan.next();
+        // scan.close();
 
-        System.out.println("You have selected to start at " + start + " and end at " + end + ".");
+        // System.out.println("You have selected to start at " + start + " and end at " + end + ".");
 
+        // goal = end;
+        // DFS dfs = new DFS();
+
+        
+    }
+
+    ArrayList<Node> route;
+    
+    public void aStar(String start, String end) {
         goal = end;
-        tutoring.DFS dfs = new tutoring.DFS();
-
         // Find the node specified by the user to start the Algorithm at
         nodesList.forEach((node) -> {
             if (node.getName().equals(start)) {
@@ -671,11 +679,15 @@ public class DFS {
                     System.out.print(n.getName() + " ");*/
 
                 //dfs.dfsUsingStack(adjacency_matrix, node);
-                ArrayList<Node> route = dfs.AStar(adjacency_matrix, node);
+                route = this.AStar(this.adjacency_matrix, node);
+                // Reverse to get traverse path
+                Collections.reverse(route);
+
                 for (Node n : route) {
                     System.out.print(n.getName() + " ");
                 }
             }
         });
     }
+    
 }
