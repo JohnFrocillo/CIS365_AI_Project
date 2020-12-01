@@ -268,15 +268,40 @@ public class AI {
                 // Use GameState object gs to access and update data
                 updateGameStateFromGUI();
                 System.out.println("Iron Man Button Pressed");
-                
+
+                DFS dfs = new DFS();
+                String start = gs.friendlyIronMan.location;
+                String end = gs.enemyIronManLocation;
+
                 // If they have 2 action tokens, do nothing and rest. Don't 'push' and take damage
                 if (gs.friendlyIronMan.actionTokens >= 2) {
                     JOptionPane.showMessageDialog(null, "Iron Man should do nothing to clear his action tokens");
                     return;
                 }
                 // If in range of an enemy, attack!
-
+                else if (dfs.lineOfSight(start, end) > -1) {
+                    // TODO: range attack
+                }
                 // If out of range, get as close as possible using A*
+                else {
+                    dfs.aStar(start, end, false);
+
+                    int i;
+                    for (i = 0;
+                         i < gs.friendlyCaptainAmerica.getSpeedValue();
+                         i++) {
+
+                        if (dfs.isWater(dfs.route.get(i)) ||
+                            i >= dfs.route.size() - 1) break;
+
+                        if (dfs.route.get(i).getName().equals(end)) {
+                            i--;
+                            break;
+                        }
+                    }
+
+                    JOptionPane.showMessageDialog(null, "Enemy out of range, move Iron man to: " + dfs.route.get(i).getName());
+                }
             }
         });
 

@@ -195,6 +195,115 @@ public class DFS {
         return water_tiles[i];
     }
 
+    /**
+     * Wrapper for a Line of Sight calculator
+     * @param a Name of starting square on map
+     * @param b Name of ending square on map
+     * @see DFS#lineOfSight(Node, Node)
+     * @return the distance to the end from the start.  -1 if there is no LoS.
+     */
+    public int lineOfSight(String a, String b) {
+        return lineOfSight(new Node(a), new Node(b));
+    }
+
+    /**
+     * A Line of Sight calculator using Bresenham's Line Generation Algorithm
+     * Sources: https://www.geeksforgeeks.org/bresenhams-line-generation-algorithm/
+     * https://csustan.csustan.edu/~tom/Lecture-Notes/Graphics/Bresenham-Line/Bresenham-Line.pdf
+     * @param a starting node
+     * @param b ending node
+     * @return the distance to the end from the start.  -1 if there is no LoS.
+     */
+    public int lineOfSight(Node a, Node b) {
+        Node cur = a;
+        int distance = 0;
+
+        int dx, dy;
+        int incX, incY;
+
+        dx = b.getX() - a.getX();
+        dy = b.getY() - a.getY();
+
+        if (dy < 0) {
+            dy = -dy;
+            incY = -1;
+        } else {
+            incY = 1;
+        }
+
+        if (dx < 0) {
+            dx = -dx;
+            incX = -1;
+        } else {
+            incX = 1;
+        }
+
+        dx *= 2;
+        dy *= 2;
+
+        if (dx > dy) {
+            int error = dy - (dx / 2);
+            int x = a.getX(), y = a.getY();
+            while (x != b.getX()) {
+                x += incX;
+                if (error >= 0) {
+                    y += incY;
+                    error -= dx;
+                }
+                error += dy;
+                distance++;
+
+                // Check if next tile in line is a neighbor of the current node.
+                boolean         found     = false;
+                ArrayList<Node> neighbors = findNeighbours(adjacency_matrix, cur);
+
+                for (Node n : neighbors)
+                {
+                    String name = "" + (char) (x + 65) + (y + 1);
+                    System.out.println(name);
+                    if (n.getName().equals(name))
+                    {
+                        found = true;
+                        cur = n;
+                        break;
+                    }
+                }
+                if (!found) return -1;
+            }
+        } else {
+            int error = dx - (dy / 2);
+            int x = a.getX(), y = a.getY();
+            while (y != b.getY()) {
+                if (error >= 0) {
+                    x += incX;
+                    error -= dy;
+                }
+                y += incY;
+                error += dx;
+                distance++;
+
+                // Check if next tile in line is a neighbor of the current node.
+                boolean         found     = false;
+                ArrayList<Node> neighbors = findNeighbours(adjacency_matrix, cur);
+
+                for (Node n : neighbors)
+                {
+                    String name = "" + (char) (x + 65) + (y + 1);
+                    System.out.println(name);
+                    if (n.getName().equals(name))
+                    {
+                        found = true;
+                        cur = n;
+                        break;
+                    }
+                }
+                if (!found) return -1;
+            }
+        }
+
+        return distance;
+    }
+
     public DFS() {
         nodesList = new ArrayList<>();
 
