@@ -7,6 +7,13 @@ public class IronMan {
     // empty constructor. Change or overload if needed
     public IronMan(){}
 
+    public boolean isKOd() {
+        if (clickNumber > 7 || clickNumber < 0)
+            return true;
+        else
+            return false;
+    }
+
     // Based on the card in Project Appendix
     public int getSpeedValue() {
 

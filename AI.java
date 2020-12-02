@@ -4,11 +4,15 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+//import jdk.javadoc.internal.tool.Start;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class AI {
     // Create the game state to track everything
@@ -220,45 +224,233 @@ public class AI {
 
         // Display the GUI
         frame.setVisible(true);
+        //DELETE: Fill with test data
+        fillTestData();
 
         captainAmericaButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Use the fields filled in to determine what cap should do
-                // use A* and should they move? Attack? Make decesion
-                // Use GameState object gs to access and update data
+                DFS dfs = new DFS();
                 updateGameStateFromGUI();
+                String result = "";
                 System.out.println("Captain America Button Pressed");
-
-                // If they have 2 action tokens, do nothing and rest. Don't 'push' and take damage
-                if (gs.friendlyCaptainAmerica.actionTokens >= 2) {
-                    JOptionPane.showMessageDialog(null, "Captain America should do nothing to clear his action tokens.");
+                // Check action tokens and powers
+                if(Arrays.asList(gs.friendlyCaptainAmerica.getActivePower()).contains("Willpower")
+                    && gs.friendlyCaptainAmerica.actionTokens >= 2) {
+                    // Can push without taking damage
+                    result += "Use Willpower,\n";
+                }
+                else if (!Arrays.asList(gs.friendlyCaptainAmerica.getActivePower()).contains("Willpower")
+                            && gs.friendlyCaptainAmerica.actionTokens >= 2) {
+                    // Do not push and take damage
+                    result += "Captain America should do nothing to clear his action tokens";
+                    gs.friendlyCaptainAmerica.actionTokens = 0;
+                    JOptionPane.showMessageDialog(null, result);
                     return;
                 }
 
-                // If in range of an enemy, attack!
-                DFS dfs = new DFS();
-                String start = gs.friendlyCaptainAmerica.location;
-                // BEFORE MOVING, MAKE SURE THE SPOT IS NOT OCCUPIED
-                // Go for enemy Captain America first; he is the weakest
-                String end = gs.enemyCaptainAmericaLocation;
-                dfs.aStar(start, end, true);
-                // If out of range, get as close as possible using A*
-                if (dfs.route.size() > gs.friendlyCaptainAmerica.getRangeValue()) {
-                    if (dfs.route.size() >= gs.friendlyCaptainAmerica.getSpeedValue()) {
-                        JOptionPane.showMessageDialog(null, "Enemy out of range, move Captain America to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue()));
+                // Use charge if possible
+                if (Arrays.asList(gs.friendlyCaptainAmerica.getActivePower()).contains("Charge")) {
+                    // see if charge can be used: half speed and free close attack
+                    String start = gs.friendlyCaptainAmerica.location;
+
+                    // Go for enemy Captain America first; he is the weakest
+                    // See who is in range, and use minmax to compare who is the best target
+                    String end = gs.enemyCaptainAmericaLocation;
+                    int newChargeSpeed = gs.friendlyCaptainAmerica.getSpeedValue()/2;
+                    dfs = new DFS(); //clear the route/nodelist
+                    dfs.aStar(start, end, true);
+                    if(dfs.route.size()-1 <= newChargeSpeed) {
+                        result += "Use Charge, move to: " + dfs.route.get(dfs.route.size()-2) + "\nand attack enemy Captain America";
+                        gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
+                        JOptionPane.showMessageDialog(null, result);
+                        return;
                     }
                     else {
-                        JOptionPane.showMessageDialog(null, "Enemy out of range, move Captain America to: " + dfs.route.get(dfs.route.size()-2));
+                        dfs = new DFS();
+                        end = gs.enemyIronManLocation;
+                        dfs.aStar(start, end, true);
+                        if(dfs.route.size()-1 <= newChargeSpeed) {
+                            result += "Use Charge, move to: " + dfs.route.get(dfs.route.size()-2) + "\nand attack enemy Iron Man";
+                            gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        }
+                        else {
+                            dfs = new DFS();
+                            end = gs.enemyThorLocation;
+                            dfs.aStar(start, end, true);
+                            if(dfs.route.size()-1 <= newChargeSpeed) {
+                                result += "Use Charge, move to: " + dfs.route.get(dfs.route.size()-2) + "\nand attack enemy Thor";
+                                gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
+                                JOptionPane.showMessageDialog(null, result);
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                // See who, if anyone, is in range to attack
+                dfs = new DFS();
+                String start = gs.friendlyCaptainAmerica.location;
+                String end = gs.enemyCaptainAmericaLocation;
+                int speed = gs.friendlyCaptainAmerica.getSpeedValue();
+                dfs.aStar(start, end, true);
+                if (dfs.route.size()-1 <= speed) {
+                    // enemy cap in range
+                    // check for clear line of sight
+                    if (dfs.lineOfSight(start, end) > -1) {
+                        result += "\nAttack enemy Captain America!";
+                        JOptionPane.showMessageDialog(null, result);
+                        return;
                     }
                 }
                 else {
-                    JOptionPane.showMessageDialog(null, "If clear line of sight, attack enemy Captain America!\nElse move to: " + dfs.route.get(dfs.route.size()-2));
+                    dfs = new DFS();
+                    end = gs.enemyIronManLocation;
+                    dfs.aStar(start, end, true);
+                    if (dfs.route.size()-1 <= speed) {
+                        // enemy iron man in range
+                        // check for clear line of sight
+                        if (dfs.lineOfSight(start, end) > -1) {
+                            result += "\nAttack enemy Iron Man!";
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        }
+                    }
+                    else {
+                        dfs = new DFS();
+                        end = gs.enemyThorLocation;
+                        dfs.aStar(start, end, true);
+                        if (dfs.route.size()-1 <= speed) {
+                            // enemy iron man in range
+                            // check for clear line of sight
+                            if (dfs.lineOfSight(start, end) > -1) {
+                                result += "\nAttack enemy Thor!";
+                                JOptionPane.showMessageDialog(null, result);
+                                return;
+                            }
+                        }
+                    }
+
                 }
-                return;
 
-                
+                // If not attacking (no one in range), use min max and A* to see who to move towards
+                CaptainAmerica tempEnemyCap = new CaptainAmerica();
+                tempEnemyCap.clickNumber = gs.enemyCaptainAmericaClickNumber;
+                IronMan tempEnemyIronMan = new IronMan();
+                tempEnemyIronMan.clickNumber = gs.enemyIronManClickNumber;
+                Thor tempEnemyThor = new Thor();
+                tempEnemyThor.clickNumber = gs.enemyThorClickNumber;
 
+                // Make sure no one is ko'd, if they are pass a huge number for clickNum so it is not chosen
+                if (tempEnemyCap.isKOd()) {
+                    tempEnemyCap.clickNumber = -99;
+                }
+                if (tempEnemyIronMan.isKOd()) {
+                    tempEnemyIronMan.clickNumber = -99;
+                }
+                if (tempEnemyThor.isKOd()) {
+                    tempEnemyThor.clickNumber = -99;
+                }
+                MovementMinMax minMax = new MovementMinMax(tempEnemyCap.getDefenseValue(), tempEnemyCap.clickNumber, tempEnemyIronMan.getDefenseValue(), tempEnemyIronMan.clickNumber, tempEnemyThor.getDefenseValue(), tempEnemyThor.clickNumber);
+
+                if (tempEnemyCap.isKOd() && tempEnemyIronMan.isKOd()) {
+                    System.out.println("Thor");
+                    dfs = new DFS();
+                    end = gs.enemyThorLocation;
+                    dfs.aStar(start, end, true);
+                    if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue()) {
+                        result += "Captain America move to: " + dfs.route.get(dfs.route.size()-2);
+                        gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
+                        JOptionPane.showMessageDialog(null, result);
+                        return;
+                    }
+
+                }
+                else if (tempEnemyCap.isKOd() && tempEnemyThor.isKOd()) {
+                    System.out.println("Iron Man");
+                    dfs = new DFS();
+                    end = gs.enemyIronManLocation;
+                    dfs.aStar(start, end, true);
+                    if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue()) {
+                        result += "Captain America move to: " + dfs.route.get(dfs.route.size()-2);
+                        gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
+                        JOptionPane.showMessageDialog(null, result);
+                        return;
+                    }
+                }
+                else if (tempEnemyIronMan.isKOd() && tempEnemyThor.isKOd()) {
+                    System.out.println("Captain America");
+                    dfs = new DFS();
+                    end = gs.enemyCaptainAmericaLocation;
+                    dfs.aStar(start, end, true);
+                    if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue()) {
+                        result += "Captain America move to: " + dfs.route.get(dfs.route.size()-2);
+                        gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
+                        JOptionPane.showMessageDialog(null, result);
+                        return;
+                    }
+                }
+                else {
+                    if (minMax.result == minMax.enemyCaptainAmericaValue) {
+                        // Go for Cap
+                        dfs = new DFS();
+                        start = gs.friendlyCaptainAmerica.location;
+                        end = gs.enemyCaptainAmericaLocation;
+                        dfs.aStar(start, end, true);
+                        if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue()) {
+                            result += "Captain America move to: " + dfs.route.get(dfs.route.size()-2);
+                            gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        }
+                        else {
+                            result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue());
+                            gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        }
+                    }
+                    else if (minMax.result == minMax.enemyIronManValue) {
+                        // Go for Iron Man
+                        dfs = new DFS();
+                        start = gs.friendlyCaptainAmerica.location;
+                        end = gs.enemyIronManLocation;
+                        dfs.aStar(start, end, true);
+                        if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue()) {
+                            result += "Captain America move to: " + dfs.route.get(dfs.route.size()-2);
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        }
+                        else {
+                            result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue());
+                            gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        }
+                    }
+                    else {
+                        // Go for Thor
+                        dfs = new DFS();
+                        start = gs.friendlyCaptainAmerica.location;
+                        end = gs.enemyIronManLocation;
+                        dfs.aStar(start, end, true);
+                        if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue()) {
+                            result += "Captain America move to: " + dfs.route.get(dfs.route.size()-2);
+                            gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        }
+                        else {
+                            result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue());
+                            gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        }
+                    }
+                }
             }
+
         });
 
         ironManButton.addActionListener(new ActionListener() {
@@ -346,12 +538,33 @@ public class AI {
         gs.friendlyThor.clickNumber = Integer.parseInt(friendlyThorClickNumber.getText());
         gs.friendlyThor.actionTokens = Integer.parseInt(friendlyThorActionTokens.getText());
 
-        // Just for testing to see if it works
-        //JOptionPane.showMessageDialog(null, "Here is the current GameState:\n" + gs.toString());
     }
 
     public static void main(String[] args) {
         AI ai = new AI();
+    }
+
+    private void fillTestData() {
+        enemyCaptainAmericaLocation.setText("A5");
+        enemyCaptainAmericaClickNumber.setText("1");
+        enemyCaptainAmericaActionTokens.setText("0");
+        friendlyCaptainAmericaLocation.setText("A1");
+        friendlyCaptainAmericaClickNumber.setText("1");
+        friendlyCaptainAmericaActionTokens.setText("0");
+
+        enemyIronManLocation.setText("P5");
+        enemyIronManClickNumber.setText("1");
+        enemyIronManActionTokens.setText("0");
+        friendlyIronManLocation.setText("P1");
+        friendlyIronManClickNumber.setText("1");
+        friendlyIronManActionTokens.setText("0");
+
+        enemyThorLocation.setText("D5");
+        enemyThorClickNumber.setText("1");
+        enemyThorActionTokens.setText("0");
+        friendlyThorLocation.setText("D1");
+        friendlyThorClickNumber.setText("1");
+        friendlyThorActionTokens.setText("0");
     }
 
 }
