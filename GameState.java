@@ -1,5 +1,3 @@
-package tutoring;
-
 import java.util.ArrayList;
 
 public class GameState {

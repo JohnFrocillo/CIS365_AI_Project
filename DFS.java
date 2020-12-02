@@ -1,5 +1,3 @@
-package tutoring;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -117,7 +115,8 @@ public class DFS {
             // Get and filter neighbors out if they are blocked by objects
             ArrayList<Node> neighbors = findNeighbours(adjacency_matrix, cur);
             for (String loc : objLocations) {
-                neighbors.remove(new Node(loc));
+                if (!loc.equals(goal))
+                    neighbors.remove(new Node(loc));
             }
 
             for (Node n : neighbors) {
@@ -320,6 +319,22 @@ public class DFS {
         }
 
         return distance;
+    }
+
+    /**
+     * Calculates if all other enemies are adjacent to target enemy.
+     * @param target location of target
+     * @param loc1 location of possible neighbor
+     * @param loc2 location of possible neighbor
+     * @return Whether or not the enemies are adjacent to eachother
+     */
+    public boolean neighboringAllEnemy(String target, String loc1, String loc2) {
+        int count = 0;
+        for (Node n : findNeighbours(adjacency_matrix, new Node(target))) {
+            if (n.getName().equals(loc1) || n.getName().equals(loc2)) count++;
+        }
+
+        return count >= 2;
     }
 
     public DFS() {
@@ -902,7 +917,7 @@ public class DFS {
     public static void main(String[] args) {
         DFS dfs = new DFS();
 
-        Node s = new Node("D4");
+        Node s = new Node("A2");
         Node e = new Node("A1");
         ArrayList<String> loc = new ArrayList<>();
         loc.add("B2");
