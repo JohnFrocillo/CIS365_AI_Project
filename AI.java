@@ -1,3 +1,5 @@
+package tutoring;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -9,6 +11,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class AI {
     // Create the game state to track everything
@@ -241,7 +244,7 @@ public class AI {
                 // BEFORE MOVING, MAKE SURE THE SPOT IS NOT OCCUPIED
                 // Go for enemy Captain America first; he is the weakest
                 String end = gs.enemyCaptainAmericaLocation;
-                dfs.aStar(start, end, true);
+                dfs.aStar(start, end, gs.getBlockingLocations(), true);
                 // If out of range, get as close as possible using A*
                 if (dfs.route.size() > gs.friendlyCaptainAmerica.getRangeValue()) {
                     if (dfs.route.size() >= gs.friendlyCaptainAmerica.getSpeedValue()) {
@@ -270,21 +273,56 @@ public class AI {
                 System.out.println("Iron Man Button Pressed");
 
                 DFS dfs = new DFS();
+                String result = "";
                 String start = gs.friendlyIronMan.location;
-                String end = gs.enemyIronManLocation;
+                String end = "";
+                int losCaptain = dfs.lineOfSight(start, gs.enemyCaptainAmericaLocation, gs.getBlockingLocations(true));
+                int losIronman = dfs.lineOfSight(start, gs.enemyIronManLocation, gs.getBlockingLocations(true));
+                int losThor = dfs.lineOfSight(start, gs.enemyThorLocation, gs.getBlockingLocations(true));
+
+                // Not enough tokens to attack or move
+                if (gs.friendlyIronMan.actionTokens >= 2) {
+                    JOptionPane.showMessageDialog(null, "Iron Man should do nothing to clear his action tokens");
+                    return;
+                }
+                // Has line of sight to enemy
+                else if (losCaptain > 0 || losIronman > 0 || losThor > 0) {
+                    // TODO: Running shot
+                    if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Running Shot")) {
+                        // FIXME: result += "-2 Damage taken (Invulnerability)";
+                    }
+                    // TODO: Energy Explosion
+                    // TODO: Close Combat Expert (Find target first)
+                    if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Close Combat Expert")) {
+
+                    }
+                }
+                // Move to enemy
+                // TODO: Sidestep
+
+                // TODO: Invulnerability
+                if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Invulnerability")) {
+                    result += "-2 Damage taken (Invulnerability)";
+                }
+                // TODO: Toughness
+                if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Toughness")) {
+                    result += "-1 Damage taken (Toughness)";
+                }
+
+
+
+                if (losCaptain == -1 && losIronman == -1 && losThor == -1) {
+
+                }
 
                 // If they have 2 action tokens, do nothing and rest. Don't 'push' and take damage
                 if (gs.friendlyIronMan.actionTokens >= 2) {
                     JOptionPane.showMessageDialog(null, "Iron Man should do nothing to clear his action tokens");
                     return;
                 }
-                // If in range of an enemy, attack!
-                else if (dfs.lineOfSight(start, end) > -1) {
-                    // TODO: range attack
-                }
                 // If out of range, get as close as possible using A*
                 else {
-                    dfs.aStar(start, end, false);
+                    dfs.aStar(start, end, gs.getBlockingLocations(false), false);
 
                     int i;
                     for (i = 0;

@@ -1,3 +1,7 @@
+package tutoring;
+
+import java.util.ArrayList;
+
 public class GameState {
 
     // empty constructor
@@ -42,6 +46,24 @@ public class GameState {
     // Was Captain America carried?
         // Again this might be best in the figure's own class
     public boolean captainAmericaWasCarried;
+
+    /**
+     * @return All LoS and movement blocking object locations
+     */
+    public ArrayList<String> getBlockingLocations(boolean considerFriendly) {
+        ArrayList<String> list = new ArrayList<>();
+        if (considerFriendly)
+        {
+            list.add(friendlyCaptainAmericaLocation);
+            list.add(friendlyIronManLocation);
+            list.add(friendlyThorLocation);
+        }
+        list.add(enemyCaptainAmericaLocation);
+        list.add(enemyIronManLocation);
+        list.add(enemyThorLocation);
+        list.add(heavyObjectLocation);
+        return list;
+    }
 
     @Override
     public String toString() {

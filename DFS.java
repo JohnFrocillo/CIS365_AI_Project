@@ -1,3 +1,5 @@
+package tutoring;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -88,10 +90,11 @@ public class DFS {
      * assisted by: https://github.com/psikoi/AStar-Pathfinding
      * @param adjacency_matrix adjacency matrix for the graph to path-find
      * @param start Node to begin path-finding on
+     * @param objLocations locations of objects that can block the path
      * @param considerWater water tiles have higher cost than normal
      * @return Back-traced path ArrayList from end to start
      */
-    public ArrayList<Node> AStar(int adjacency_matrix[][], Node start, boolean considerWater) {
+    public ArrayList<Node> AStar(int adjacency_matrix[][], Node start, ArrayList<String> objLocations, boolean considerWater) {
         if (start.getName() == goal) {
             return new ArrayList<>();
         }
@@ -111,7 +114,13 @@ public class DFS {
             open.remove(cur);
             closed.add(cur);
 
-            for (Node n : findNeighbours(adjacency_matrix, cur)) {
+            // Get and filter neighbors out if they are blocked by objects
+            ArrayList<Node> neighbors = findNeighbours(adjacency_matrix, cur);
+            for (String loc : objLocations) {
+                neighbors.remove(new Node(loc));
+            }
+
+            for (Node n : neighbors) {
                 if (closed.contains(n)) continue;
 
                 int score = cur.getCost() + distance(cur, n);
@@ -199,11 +208,11 @@ public class DFS {
      * Wrapper for a Line of Sight calculator
      * @param a Name of starting square on map
      * @param b Name of ending square on map
-     * @see DFS#lineOfSight(Node, Node)
+     * @see DFS#lineOfSight(Node, Node, ArrayList)
      * @return the distance to the end from the start.  -1 if there is no LoS.
      */
-    public int lineOfSight(String a, String b) {
-        return lineOfSight(new Node(a), new Node(b));
+    public int lineOfSight(String a, String b, ArrayList<String> objLocations) {
+        return lineOfSight(new Node(a), new Node(b), objLocations);
     }
 
     /**
@@ -212,9 +221,10 @@ public class DFS {
      * https://csustan.csustan.edu/~tom/Lecture-Notes/Graphics/Bresenham-Line/Bresenham-Line.pdf
      * @param a starting node
      * @param b ending node
+     * @param objLocations list of locations of objects that could block LoS
      * @return the distance to the end from the start.  -1 if there is no LoS.
      */
-    public int lineOfSight(Node a, Node b) {
+    public int lineOfSight(Node a, Node b, ArrayList<String> objLocations) {
         Node cur = a;
         int distance = 0;
 
@@ -260,7 +270,6 @@ public class DFS {
                 for (Node n : neighbors)
                 {
                     String name = "" + (char) (x + 65) + (y + 1);
-                    System.out.println(name);
                     if (n.getName().equals(name))
                     {
                         found = true;
@@ -269,6 +278,11 @@ public class DFS {
                     }
                 }
                 if (!found) return -1;
+
+                // Check if the cur tile is blocked by an object
+                for (String loc : objLocations) {
+                    if (cur.getName().equals(loc)) return -1;
+                }
             }
         } else {
             int error = dx - (dy / 2);
@@ -289,7 +303,6 @@ public class DFS {
                 for (Node n : neighbors)
                 {
                     String name = "" + (char) (x + 65) + (y + 1);
-                    System.out.println(name);
                     if (n.getName().equals(name))
                     {
                         found = true;
@@ -298,6 +311,11 @@ public class DFS {
                     }
                 }
                 if (!found) return -1;
+
+                // Check if the cur tile is blocked by an object
+                for (String loc : objLocations) {
+                    if (cur.getName().equals(loc)) return -1;
+                }
             }
         }
 
@@ -858,7 +876,7 @@ public class DFS {
 
     ArrayList<Node> route;
     
-    public void aStar(String start, String end, boolean water) {
+    public void aStar(String start, String end, ArrayList<String> objLocations, boolean water) {
         goal = end;
         // Find the node specified by the user to start the Algorithm at
         nodesList.forEach((node) -> {
@@ -870,7 +888,7 @@ public class DFS {
                     System.out.print(n.getName() + " ");*/
 
                 //dfs.dfsUsingStack(adjacency_matrix, node);
-                route = this.AStar(this.adjacency_matrix, node, water);
+                route = this.AStar(this.adjacency_matrix, node, objLocations, water);
                 // Reverse to get traverse path
                 Collections.reverse(route);
 
@@ -880,5 +898,22 @@ public class DFS {
             }
         });
     }
-    
+
+    public static void main(String[] args) {
+        DFS dfs = new DFS();
+
+        Node s = new Node("D4");
+        Node e = new Node("A1");
+        ArrayList<String> loc = new ArrayList<>();
+        loc.add("B2");
+
+        goal = e.getName();
+
+        System.out.println(dfs.lineOfSight(s,e, loc));
+        ArrayList<Node> route = dfs.AStar(dfs.adjacency_matrix, s, loc, false);
+
+        for (Node r : route) {
+            System.out.println(r.getName());
+        }
+    }
 }

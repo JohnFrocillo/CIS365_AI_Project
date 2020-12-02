@@ -1,3 +1,5 @@
+package tutoring;
+
 public class Thor {
     public int pointValue = 150;
     public String location;

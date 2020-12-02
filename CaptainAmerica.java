@@ -1,3 +1,5 @@
+package tutoring;
+
 public class CaptainAmerica {
     public int pointValue = 50;
     public String location;

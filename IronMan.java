@@ -1,3 +1,5 @@
+package tutoring;
+
 public class IronMan {
     public int pointValue = 100;
     public String location;
@@ -113,17 +115,12 @@ public class IronMan {
     public String[]  getActivePower() {
         switch (clickNumber) {
             case 1:
-                return new String[]{"Running Shot", "Energy Explosion", "Invulnerability"};
             case 2:
-                return new String[]{"Running Shot", "Energy Explosion", "Invulnerability"};
             case 3:
                 return new String[]{"Running Shot", "Energy Explosion", "Invulnerability"};
             case 4:
-                return new String[]{"Sidestep", "Toughness", "Ranged Combat Expert"};
             case 5:
-                return new String[]{"Sidestep", "Toughness", "Ranged Combat Expert"};
             case 6:
-                return new String[]{"Sidestep", "Toughness", "Ranged Combat Expert"};
             case 7:
                 return new String[]{"Sidestep", "Toughness", "Ranged Combat Expert"};
             default:
