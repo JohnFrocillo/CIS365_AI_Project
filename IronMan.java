@@ -26,13 +26,13 @@ public class IronMan {
             case 1:
             case 2:
             case 3:
-                return 11;
+                return 10;
             case 4:
             case 5:
-                return 10;
+                return 9;
             case 6:
             case 7:
-                return 9;
+                return 8;
             default:
                 // return 0 to imply they are KO'd or can't move yet
                 return 0;

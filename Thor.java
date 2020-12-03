@@ -29,11 +29,11 @@ public class Thor {
             case 4:
             case 5:
             case 6:
-                return 11;
+                return 10;
             case 7:
             case 8:
             case 9:
-                return 10;
+                return 9;
             default:
                 // return 0 to imply they are KO'd or can't move yet
                 return 0;

@@ -389,14 +389,14 @@ public class AI {
                     dfs = new DFS();
                     end = gs.enemyThor.location;
                     dfs.aStar(start, end, gs.getBlockingLocations(false), true);
-                    if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue()) {
+                    if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue() + 1) {
                         result += "Captain America move to: " + dfs.route.get(dfs.route.size()-2);
                         gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
                         JOptionPane.showMessageDialog(null, result);
                         return;
                     } // if they aren't fully in range of speed, move as far as possible
                     else {
-                        result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue());
+                        result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue() + 1);
                         gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
                         JOptionPane.showMessageDialog(null, result);
                         return;
@@ -408,7 +408,7 @@ public class AI {
                     dfs = new DFS();
                     end = gs.enemyIronMan.location;
                     dfs.aStar(start, end, gs.getBlockingLocations(false), true);
-                    if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue()) {
+                    if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue() + 1) {
                         result += "Captain America move to: " + dfs.route.get(dfs.route.size()-2);
                         gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
                         JOptionPane.showMessageDialog(null, result);
@@ -416,7 +416,7 @@ public class AI {
                     }
                     // if they aren't fully in range of speed, move as far as possible
                     else {
-                        result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue());
+                        result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue() + 1);
                         gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
                         JOptionPane.showMessageDialog(null, result);
                         return;
@@ -427,7 +427,7 @@ public class AI {
                     dfs = new DFS();
                     end = gs.enemyCaptainAmerica.location;
                     dfs.aStar(start, end, gs.getBlockingLocations(false), true);
-                    if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue()) {
+                    if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue() + 1) {
                         result += "Captain America move to: " + dfs.route.get(dfs.route.size()-2);
                         gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
                         JOptionPane.showMessageDialog(null, result);
@@ -435,7 +435,7 @@ public class AI {
                     }
                     // if they aren't fully in range of speed, move as far as possible
                     else {
-                        result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue());
+                        result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue() + 1);
                         gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
                         JOptionPane.showMessageDialog(null, result);
                         return;
@@ -448,14 +448,14 @@ public class AI {
                         start = gs.friendlyCaptainAmerica.location;
                         end = gs.enemyCaptainAmerica.location;
                         dfs.aStar(start, end, gs.getBlockingLocations(false), true);
-                        if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue()) {
+                        if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue() + 1) {
                             result += "Captain America move to: " + dfs.route.get(dfs.route.size()-2);
                             gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
                             JOptionPane.showMessageDialog(null, result);
                             return;
                         }
                         else {
-                            result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue());
+                            result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue() + 1);
                             gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
                             JOptionPane.showMessageDialog(null, result);
                             return;
@@ -467,13 +467,13 @@ public class AI {
                         start = gs.friendlyCaptainAmerica.location;
                         end = gs.enemyIronMan.location;
                         dfs.aStar(start, end, gs.getBlockingLocations(false), true);
-                        if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue()) {
+                        if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue() + 1) {
                             result += "Captain America move to: " + dfs.route.get(dfs.route.size()-2);
                             JOptionPane.showMessageDialog(null, result);
                             return;
                         }
                         else {
-                            result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue());
+                            result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue() + 1);
                             gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
                             JOptionPane.showMessageDialog(null, result);
                             return;
@@ -485,14 +485,14 @@ public class AI {
                         start = gs.friendlyCaptainAmerica.location;
                         end = gs.enemyIronMan.location;
                         dfs.aStar(start, end, gs.getBlockingLocations(false), true);
-                        if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue()) {
+                        if(dfs.route.size()-1 <= gs.friendlyCaptainAmerica.getSpeedValue() + 1) {
                             result += "Captain America move to: " + dfs.route.get(dfs.route.size()-2);
                             gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
                             JOptionPane.showMessageDialog(null, result);
                             return;
                         }
                         else {
-                            result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue());
+                            result += "Captain America move to: " + dfs.route.get(gs.friendlyCaptainAmerica.getSpeedValue() + 1);
                             gs.friendlyCaptainAmerica.location = ""+dfs.route.get(dfs.route.size()-2);
                             JOptionPane.showMessageDialog(null, result);
                             return;
@@ -760,7 +760,7 @@ public class AI {
                     dfs.aStar(start, gs.enemyThor.location, gs.getBlockingLocations(false), false);
 
                 String finalLoc = dfs.route.get(
-                        gs.friendlyIronMan.getSpeedValue() > dfs.route.size() ? dfs.route.size() - 2 : gs.friendlyIronMan.getSpeedValue())
+                        gs.friendlyIronMan.getSpeedValue() + 1 > dfs.route.size() ? dfs.route.size() - 2 : gs.friendlyIronMan.getSpeedValue() + 1)
                         .getName();
                 JOptionPane.showMessageDialog(null, "Enemy out of range, move Iron man to: " + finalLoc);
             }
