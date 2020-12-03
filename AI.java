@@ -699,22 +699,49 @@ public class AI {
                 }
 
                 // General Attack
-                if (tempEnemyCap.isKOd() &&
+                if (!tempEnemyCap.isKOd() &&
                     tempEnemyCap.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() &&
                     losCaptain > 0 && losCaptain <= gs.friendlyIronMan.getRangeValue()) {
-                    result += "Attack Captain America\n";
+                    // Energy Explosion on Cap
+                    if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Energy Explosion"))
+                    {
+                        if (dfs.neighboringAllEnemy(gs.enemyCaptainAmerica.location, gs.enemyThor.location,
+                                                    gs.enemyIronMan.location))
+                        {
+                            result += "Use Energy Explosion to deal 2 damage to all enemies adjacent\n";
+                        }
+                    } else
+                        result += "Attack Captain America\n";
                     JOptionPane.showMessageDialog(null, result);
                     return;
-                } else if (tempEnemyIronMan.isKOd() &&
+                } else if (!tempEnemyIronMan.isKOd() &&
                            tempEnemyIronMan.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() &&
                            losIronman > 0 && losIronman <= gs.friendlyIronMan.getRangeValue()) {
-                    result += "Attack Ironman\n";
+                    // Energy Explosion on Ironman
+                    if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Energy Explosion"))
+                    {
+                        if (dfs.neighboringAllEnemy(gs.enemyIronMan.location, gs.enemyThor.location,
+                                                    gs.enemyCaptainAmerica.location))
+                        {
+                            result += "Use Energy Explosion to deal 2 damage to all enemies adjacent\n";
+                        }
+                    } else
+                        result += "Attack Ironman\n";
                     JOptionPane.showMessageDialog(null, result);
                     return;
-                } else if (tempEnemyThor.isKOd() &&
+                } else if (!tempEnemyThor.isKOd() &&
                            tempEnemyThor.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() &&
                            losThor > 0 && losThor <= gs.friendlyIronMan.getRangeValue()) {
-                    result += "Attack Thor\n";
+                    // Energy Explosion on Thor
+                    if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Energy Explosion"))
+                    {
+                        if (dfs.neighboringAllEnemy(gs.enemyThor.location, gs.enemyCaptainAmerica.location,
+                                                    gs.enemyIronMan.location))
+                        {
+                            result += "Use Energy Explosion to deal 2 damage to all enemies adjacent\n";
+                        }
+                    } else
+                        result += "Attack Captain America\n";
                     JOptionPane.showMessageDialog(null, result);
                     return;
                 }
@@ -792,19 +819,224 @@ public class AI {
                 tempEnemyThor.clickNumber = gs.enemyThor.clickNumber;
 
                 // If they have 2 action tokens, do nothing and rest. Don't 'push' and take damage
-                if (gs.friendlyThor.actionTokens >= 1) {
+                if (Arrays.asList(gs.friendlyThor.getActivePower()).contains("Willpower") &&
+                    gs.friendlyThor.actionTokens >= 1) {
+                    result += "Use Willpower\n";
+                } else if (!Arrays.asList(gs.friendlyThor.getActivePower()).contains("Willpower") &&
+                           gs.friendlyThor.actionTokens >= 1)
+                {
                     JOptionPane.showMessageDialog(null, "Thor should do nothing to clear his action tokens");
                     return;
                 }
+
                 // If in range of an enemy, attack!
-                else if (!tempEnemyCap.isKOd() && losCaptain > -1 && losCaptain < gs.friendlyThor.getRangeValue()) {
+                if (!tempEnemyCap.isKOd() && losCaptain > -1 && losCaptain < gs.friendlyThor.getRangeValue()) {
 
-                } else if (!tempEnemyIronMan.isKOd() && losIronman > -1 && losIronman < gs.friendlyThor.getRangeValue()) {
+                    // Charge
+                    if (Arrays.asList(gs.friendlyThor.getActivePower()).contains("Charge"))
+                    {
+                        dfs.aStar(gs.friendlyThor.location, gs.enemyCaptainAmerica.location,
+                                  gs.getBlockingLocations(true), false);
+                        if (dfs.route.size() - 1 < gs.friendlyThor.getSpeedValue() / 2 &&
+                            dfs.route.size() > 2)
+                        {
+                            JOptionPane.showMessageDialog(null,
+                                                          "Using Charge move to " + dfs.route.get(dfs.route.size() - 2) + " and CLOSE attack Captain America\n");
+                            return;
+                        }
+                    }
 
-                } else if (!tempEnemyThor.isKOd() && losThor > -1 && losThor < gs.friendlyThor.getRangeValue()) {
+                    // Running Shot
+                    else if (Arrays.asList(gs.friendlyThor.getActivePower()).contains("Running Shot")) {
+                        dfs.aStar(gs.friendlyThor.location, gs.enemyCaptainAmerica.location,
+                                  gs.getBlockingLocations(true), false);
+                        if (dfs.route.size() > 2)
+                        {
+                            for (int i = 1; i < gs.friendlyThor.getSpeedValue() / 2; i++) {
+                                if (dfs.lineOfSight(
+                                        dfs.route.get(i),
+                                        dfs.route.get(dfs.route.size() - 1),
+                                        gs.getBlockingLocations(true)) <= gs.friendlyThor.getRangeValue()) {
+                                    JOptionPane.showMessageDialog(
+                                            null,
+                                            "Using Running Shot move to " + dfs.route.get(i) + " and RANGE attack Captain America\n");
+                                    return;
+                                }
+                            }
 
+                        }
+                    }
+
+                    // Normal Range
+                    else {
+                        if (Arrays.asList(gs.friendlyThor.getActivePower()).contains("Energy Explosion"))
+                        {
+                            if (dfs.neighboringAllEnemy(gs.enemyCaptainAmerica.location, gs.enemyThor.location,
+                                                        gs.enemyIronMan.location))
+                            {
+                                result += "Use Energy Explosion to deal 2 damage to all enemies adjacent\n";
+                            }
+                        } else
+                        {
+                            if (losCaptain > 2)
+                                result += "RANGE ";
+                            else result += "CLOSE ";
+
+                            result += "Attack Captain America\n";
+                        }
+                        JOptionPane.showMessageDialog(null, result);
+                        return;
+                    }
                 }
+                if (!tempEnemyIronMan.isKOd() && losIronman > -1 && losIronman < gs.friendlyThor.getRangeValue()) {
+                    // Charge
+                    if (Arrays.asList(gs.friendlyThor.getActivePower()).contains("Charge"))
+                    {
+                        dfs.aStar(gs.friendlyThor.location, gs.enemyIronMan.location,
+                                  gs.getBlockingLocations(true), false);
+                        if (dfs.route.size() - 1 < gs.friendlyThor.getSpeedValue() / 2 &&
+                            dfs.route.size() > 2)
+                        {
+                            JOptionPane.showMessageDialog(null,
+                                                          "Using Charge move to " + dfs.route.get(dfs.route.size() - 2) + " and CLOSE attack Ironman\n");
+                            return;
+                        }
+                    }
+
+                    // Running Shot
+                    else if (Arrays.asList(gs.friendlyThor.getActivePower()).contains("Running Shot")) {
+                        dfs.aStar(gs.friendlyThor.location, gs.enemyIronMan.location,
+                                  gs.getBlockingLocations(true), false);
+                        if (dfs.route.size() > 2)
+                        {
+                            for (int i = 1; i < gs.friendlyThor.getSpeedValue() / 2; i++) {
+                                if (dfs.lineOfSight(
+                                        dfs.route.get(i),
+                                        dfs.route.get(dfs.route.size() - 1),
+                                        gs.getBlockingLocations(true)) <= gs.friendlyThor.getRangeValue()) {
+                                    JOptionPane.showMessageDialog(
+                                            null,
+                                            "Using Running Shot move to " + dfs.route.get(i) + " and RANGE attack Ironman\n");
+                                    return;
+                                }
+                            }
+
+                        }
+                    }
+
+                    // Normal Range
+                    else {
+                        if (Arrays.asList(gs.friendlyThor.getActivePower()).contains("Energy Explosion"))
+                        {
+                            if (dfs.neighboringAllEnemy(gs.enemyIronMan.location, gs.enemyThor.location,
+                                                        gs.enemyCaptainAmerica.location))
+                            {
+                                result += "Use Energy Explosion to deal 2 damage to all enemies adjacent to Ironman\n";
+                            }
+                        } else
+                        {
+                            if (losIronman > 2)
+                                result += "RANGE ";
+                            else result += "CLOSE ";
+
+                            result += "Attack Ironman\n";
+                        }
+                        JOptionPane.showMessageDialog(null, result);
+                        return;
+                    }
+                }
+                if (!tempEnemyThor.isKOd() && losThor > -1 && losThor < gs.friendlyThor.getRangeValue()) {
+                    // Charge
+                    if (Arrays.asList(gs.friendlyThor.getActivePower()).contains("Charge"))
+                    {
+                        dfs.aStar(gs.friendlyThor.location, gs.enemyThor.location,
+                                  gs.getBlockingLocations(true), false);
+                        if (dfs.route.size() - 1 < gs.friendlyThor.getSpeedValue() / 2 &&
+                            dfs.route.size() > 2)
+                        {
+                            JOptionPane.showMessageDialog(null,
+                                                          "Using Charge move to " + dfs.route.get(dfs.route.size() - 2) + " and CLOSE attack Thor\n");
+                            return;
+                        }
+                    }
+
+                    // Running Shot
+                    else if (Arrays.asList(gs.friendlyThor.getActivePower()).contains("Running Shot")) {
+                        dfs.aStar(gs.friendlyThor.location, gs.enemyThor.location,
+                                  gs.getBlockingLocations(true), false);
+                        if (dfs.route.size() > 2)
+                        {
+                            for (int i = 1; i < gs.friendlyThor.getSpeedValue() / 2; i++) {
+                                if (dfs.lineOfSight(
+                                        dfs.route.get(i),
+                                        dfs.route.get(dfs.route.size() - 1),
+                                        gs.getBlockingLocations(true)) <= gs.friendlyThor.getRangeValue()) {
+                                    JOptionPane.showMessageDialog(
+                                            null,
+                                            "Using Running Shot move to " + dfs.route.get(i) + " and RANGE attack Thor\n");
+                                    return;
+                                }
+                            }
+
+                        }
+                    }
+
+                    // Normal Range
+                    else {
+                        if (Arrays.asList(gs.friendlyThor.getActivePower()).contains("Energy Explosion"))
+                        {
+                            if (dfs.neighboringAllEnemy(gs.enemyThor.location, gs.enemyIronMan.location,
+                                                        gs.enemyCaptainAmerica.location))
+                            {
+                                result += "Use Energy Explosion to deal 2 damage to all enemies adjacent to Thor\n";
+                            }
+                        } else
+                        {
+                            if (losThor > 2)
+                                result += "RANGE ";
+                            else result += "CLOSE ";
+
+                            result += "Attack Thor\n";
+                        }
+                        JOptionPane.showMessageDialog(null, result);
+                        return;
+                    }
+                }
+
+                // TODO: Sidestep
+
                 // If out of range, get as close as possible using A*
+                // Make sure no one is ko'd, if they are pass a huge number for clickNum so it is not chosen
+                if (tempEnemyCap.isKOd()) {
+                    tempEnemyCap.clickNumber = -99;
+                }
+                if (tempEnemyIronMan.isKOd()) {
+                    tempEnemyIronMan.clickNumber = -99;
+                }
+                if (tempEnemyThor.isKOd()) {
+                    tempEnemyThor.clickNumber = -99;
+                }
+
+                MovementMinMax minMax = new MovementMinMax(
+                        tempEnemyCap.getDefenseValue(),
+                        tempEnemyCap.clickNumber,
+                        tempEnemyIronMan.getDefenseValue(),
+                        tempEnemyIronMan.clickNumber,
+                        tempEnemyThor.getDefenseValue(),
+                        tempEnemyThor.clickNumber);
+
+                // If out of range, get as close as possible using A*
+                if (minMax.result == minMax.enemyCaptainAmericaValue)
+                    dfs.aStar(start, gs.enemyCaptainAmerica.location, gs.getBlockingLocations(false), false);
+                else if (minMax.result == minMax.enemyIronManValue)
+                    dfs.aStar(start, gs.enemyIronMan.location, gs.getBlockingLocations(false), false);
+                else
+                    dfs.aStar(start, gs.enemyThor.location, gs.getBlockingLocations(false), false);
+
+                String finalLoc = dfs.route.get(
+                        gs.friendlyThor.getSpeedValue() + 1 >= dfs.route.size() ? dfs.route.size() - 2 : gs.friendlyThor.getSpeedValue() + 1)
+                                           .getName();
+                JOptionPane.showMessageDialog(null, "Enemy out of range, move Thor to: " + finalLoc);
             }
         });
     }
