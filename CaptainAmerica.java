@@ -26,11 +26,9 @@ public class CaptainAmerica {
             case 1:
                 return 8;
             case 2:
-                return 7;
             case 3:
                 return 7;
             case 4:
-                return 6;
             case 5:
                 return 6;
             case 6:

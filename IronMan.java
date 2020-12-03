@@ -24,17 +24,13 @@ public class IronMan {
 
         switch (clickNumber) {
             case 1:
-                return 10;
             case 2:
-                return 10;
             case 3:
                 return 10;
             case 4:
-                return 9;
             case 5:
                 return 9;
             case 6:
-                return 8;
             case 7:
                 return 8;
             default:
