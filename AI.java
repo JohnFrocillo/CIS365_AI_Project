@@ -402,8 +402,12 @@ public class AI {
                 if (dfs.route.size()-1 <= speed && !gs.enemyCaptainAmerica.isKOd()) {
                     // enemy cap in range
                     // check for clear line of sight
-                    if (dfs.lineOfSight(start, end, gs.getBlockingLocations(true)) > -1) {
-                        result += "\nAttack enemy Captain America!";
+                    int los = dfs.lineOfSight(start, end, gs.getBlockingLocations(true));
+                    if (los > -1) {
+                        if (los > 1)
+                            result += "RANGE ";
+                        else result += "CLOSE ";
+                        result += "Attack enemy Captain America!\n";
                         JOptionPane.showMessageDialog(null, result);
                         return;
                     }
@@ -415,7 +419,11 @@ public class AI {
                     if (dfs.route.size()-1 <= speed && !gs.enemyIronMan.isKOd()) {
                         // enemy iron man in range
                         // check for clear line of sight
-                        if (dfs.lineOfSight(start, end, gs.getBlockingLocations(true)) > -1) {
+                        int los = dfs.lineOfSight(start, end, gs.getBlockingLocations(true));
+                        if (los > -1) {
+                            if (los > 1)
+                                result += "RANGE ";
+                            else result += "CLOSE ";
                             result += "\nAttack enemy Iron Man!";
                             JOptionPane.showMessageDialog(null, result);
                             return;
@@ -428,7 +436,11 @@ public class AI {
                         if (dfs.route.size()-1 <= speed && !gs.enemyThor.isKOd()) {
                             // enemy iron man in range
                             // check for clear line of sight
-                            if (dfs.lineOfSight(start, end, gs.getBlockingLocations(true)) > -1) {
+                            int los = dfs.lineOfSight(start, end, gs.getBlockingLocations(true));
+                            if (los > -1) {
+                                if (los > 1)
+                                    result += "RANGE ";
+                                else result += "CLOSE ";
                                 result += "\nAttack enemy Thor!";
                                 JOptionPane.showMessageDialog(null, result);
                                 return;
@@ -772,10 +784,7 @@ public class AI {
 
                 // General Attack
                 if (!tempEnemyCap.isKOd() &&
-<<<<<<< HEAD
-=======
-                    tempEnemyCap.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() &&
->>>>>>> thor
+                    tempEnemyCap.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() + 6 &&
                     losCaptain > 0 && losCaptain <= gs.friendlyIronMan.getRangeValue()) {
                     // Energy Explosion on Cap
                     if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Energy Explosion"))
@@ -786,14 +795,16 @@ public class AI {
                             result += "Use Energy Explosion to deal 2 damage to all enemies adjacent\n";
                         }
                     } else
+                    {
+                        if (losCaptain > 1)
+                            result += "RANGE ";
+                        else result += "CLOSE ";
                         result += "Attack Captain America\n";
+                    }
                     JOptionPane.showMessageDialog(null, result);
                     return;
                 } else if (!tempEnemyIronMan.isKOd() &&
-<<<<<<< HEAD
-=======
-                           tempEnemyIronMan.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() &&
->>>>>>> thor
+                           tempEnemyIronMan.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() + 6 &&
                            losIronman > 0 && losIronman <= gs.friendlyIronMan.getRangeValue()) {
                     // Energy Explosion on Ironman
                     if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Energy Explosion"))
@@ -804,14 +815,16 @@ public class AI {
                             result += "Use Energy Explosion to deal 2 damage to all enemies adjacent\n";
                         }
                     } else
+                    {
+                        if (losIronman > 1)
+                            result += "RANGE ";
+                        else result += "CLOSE ";
                         result += "Attack Ironman\n";
+                    }
                     JOptionPane.showMessageDialog(null, result);
                     return;
                 } else if (!tempEnemyThor.isKOd() &&
-<<<<<<< HEAD
-=======
-                           tempEnemyThor.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() &&
->>>>>>> thor
+                           tempEnemyThor.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() + 6 &&
                            losThor > 0 && losThor <= gs.friendlyIronMan.getRangeValue()) {
                     // Energy Explosion on Thor
                     if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Energy Explosion"))
@@ -822,7 +835,12 @@ public class AI {
                             result += "Use Energy Explosion to deal 2 damage to all enemies adjacent\n";
                         }
                     } else
+                    {
+                        if (losThor > 1)
+                            result += "RANGE ";
+                        else result += "CLOSE ";
                         result += "Attack Captain America\n";
+                    }
                     JOptionPane.showMessageDialog(null, result);
                     return;
                 }
@@ -876,11 +894,6 @@ public class AI {
                 // Use GameState object gs to access and update data
                 updateGameStateFromGUI();
                 System.out.println("Thor Button Pressed");
-<<<<<<< HEAD
-                
-                // Do nothing and rest. Don't 'push' and take damage
-                if (gs.friendlyThor.actionTokens >= 1) {
-=======
 
                 DFS dfs = new DFS();
                 String result = "";
@@ -906,7 +919,6 @@ public class AI {
                 } else if (!Arrays.asList(gs.friendlyThor.getActivePower()).contains("Willpower") &&
                            gs.friendlyThor.actionTokens >= 1)
                 {
->>>>>>> thor
                     JOptionPane.showMessageDialog(null, "Thor should do nothing to clear his action tokens");
                     return;
                 }
