@@ -24,23 +24,16 @@ public class Thor {
 
         switch (clickNumber) {
             case 1:
-                return 10;
             case 2:
-                return 10;
             case 3:
-                return 10;
             case 4:
-                return 10;
             case 5:
-                return 10;
             case 6:
-                return 10;
+                return 11;
             case 7:
-                return 9;
             case 8:
-                return 9;
             case 9:
-                return 9;
+                return 10;
             default:
                 // return 0 to imply they are KO'd or can't move yet
                 return 0;

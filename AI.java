@@ -797,11 +797,11 @@ public class AI {
                     return;
                 }
                 // If in range of an enemy, attack!
-                else if (losCaptain > -1 && losCaptain < gs.friendlyThor.getRangeValue()) {
+                else if (!tempEnemyCap.isKOd() && losCaptain > -1 && losCaptain < gs.friendlyThor.getRangeValue()) {
 
-                } else if (losIronman > -1 && losIronman < gs.friendlyThor.getRangeValue()) {
+                } else if (!tempEnemyIronMan.isKOd() && losIronman > -1 && losIronman < gs.friendlyThor.getRangeValue()) {
 
-                } else if (losThor > -1 && losThor < gs.friendlyThor.getRangeValue()) {
+                } else if (!tempEnemyThor.isKOd() && losThor > -1 && losThor < gs.friendlyThor.getRangeValue()) {
 
                 }
                 // If out of range, get as close as possible using A*
