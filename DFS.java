@@ -353,10 +353,10 @@ public class DFS {
             int error = dy - (dx / 2);
             int x = a.getX(), y = a.getY();
 
-            if (checkWallIntersection(
+            /*if (checkWallIntersection(
                 new Node("" + (char) (x + 65) + (y + 1)),
                 slope, intersept))
-                return -1;
+                return -1;*/
 
             while (x != b.getX()) {
                 x += incX;
@@ -395,6 +395,8 @@ public class DFS {
                 }
                 if (!found) return -1;
 
+                if (cur.getName().equals(b.getName())) return distance;
+
                 // Check if the cur tile is blocked by an object
                 for (String loc : objLocations) {
                     if (cur.getName().equals(loc)) return -1;
@@ -404,10 +406,10 @@ public class DFS {
             int error = dx - (dy / 2);
             int x = a.getX(), y = a.getY();
 
-            if (checkWallIntersection(
+            /*if (checkWallIntersection(
                 new Node("" + (char) (x + 65) + (y + 1)),
                 slope, intersept))
-                return -1;
+                return -1;*/
 
             while (y != b.getY()) {
                 if (error >= 0) {
@@ -443,6 +445,8 @@ public class DFS {
                     }
                 }
                 if (!found) return -1;
+
+                if (cur.getName().equals(b.getName())) return distance;
 
                 // Check if the cur tile is blocked by an object
                 for (String loc : objLocations) {
@@ -960,6 +964,8 @@ public class DFS {
         adjacency_matrix[250][251] = 0;
         adjacency_matrix[251][234] = 0;
         adjacency_matrix[251][250] = 0;
+
+        adjacency_matrix[143][128] = 0;
 
         // Water (all tiles default to false)
         water_tiles[4] = true;

@@ -47,10 +47,10 @@ public class GameState {
         //TODO:
         //FIXME: this is causing an issue. They won't attack when they clearly can; just move to their same spot
         // So for now it is commented out
-        // list.add(enemyCaptainAmerica.location);
-        // list.add(enemyIronMan.location);
-        // list.add(enemyThor.location);
-        // list.add(heavyObjectLocation);
+        list.add(enemyCaptainAmerica.location);
+        list.add(enemyIronMan.location);
+        list.add(enemyThor.location);
+        list.add(heavyObjectLocation);
         return list;
     }
 
