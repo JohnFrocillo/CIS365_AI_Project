@@ -33,9 +33,19 @@ public class MovementMinMax {
         MovementNode E = new MovementNode(enemyIronManValue);
         MovementNode F = new MovementNode(enemyCaptainAmericaValue);
 
-        A.addChild(new ArrayList<MovementNode>(Arrays.asList(B,C)));
-        B.addChild(new ArrayList<MovementNode>(Arrays.asList(D,E)));
-        C.addChild(F);
+        A.addChild(new ArrayList<MovementNode>(Arrays.asList(B)));
+        // Special cases: don't add KO'd characters to the tree
+        // If their value < -1, they are KO'd. If > -1, add to tree
+        if (D.getValue() > -1) {
+            B.addChild(D);
+        }
+        if (E.getValue() > -1) {
+            B.addChild(E);
+        }
+        if (F.getValue() > -1) {
+            A.addChild(C);
+            C.addChild(F);
+        }
 
         MinMax m = new MinMax();
         result = m.minMax(A, 2, true);

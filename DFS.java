@@ -334,7 +334,26 @@ public class DFS {
             if (n.getName().equals(loc1) || n.getName().equals(loc2)) count++;
         }
 
-        return count >= 2;
+        //return count >= 2;
+        return count >= 1;
+        // Only need 1 additional enemy to be adjacent, not all of them
+    }
+
+    /**
+     * Calculates whether an enemy is adjacent to a player
+     * in order to use Close Combat Expert
+     * @param player
+     * @param enemyLoc
+     * @return Whether or not an enemy is adjacent and the power can be used
+     */
+    public boolean neighboringEnemyForCloseCombatExpert (String player, String enemyLoc) {
+        int count = 0;
+        for (Node n : findNeighbours(adjacency_matrix, new Node(player))) {
+            if (n.getName().equals(enemyLoc)) {
+                count++; // There is an enemy adjacent to the player, use the ability!
+            }
+        }
+        return count >= 1;
     }
 
     public DFS() {

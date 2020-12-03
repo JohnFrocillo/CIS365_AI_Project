@@ -264,12 +264,12 @@ public class AI {
                 System.out.println("Captain America Button Pressed");
                 // Check action tokens and powers
                 if(Arrays.asList(gs.friendlyCaptainAmerica.getActivePower()).contains("Willpower")
-                    && gs.friendlyCaptainAmerica.actionTokens >= 2) {
+                    && gs.friendlyCaptainAmerica.actionTokens >= 1) {
                     // Can push without taking damage
                     result += "Use Willpower,\n";
                 }
                 else if (!Arrays.asList(gs.friendlyCaptainAmerica.getActivePower()).contains("Willpower")
-                            && gs.friendlyCaptainAmerica.actionTokens >= 2) {
+                            && gs.friendlyCaptainAmerica.actionTokens >= 1) {
                     // Do not push and take damage
                     result += "Captain America should do nothing to clear his action tokens";
                     gs.friendlyCaptainAmerica.actionTokens = 0;
@@ -315,6 +315,80 @@ public class AI {
                                 return;
                             }
                         }
+                    }
+                }
+
+                // Check for close combat expert
+                dfs = new DFS();
+                if (Arrays.asList(gs.friendlyCaptainAmerica.getActivePower()).contains("Close Combat Expert")) {
+                    // Check for close combat with enemy Cap
+                    if (!gs.enemyCaptainAmerica.isKOd() &&
+                        dfs.neighboringEnemyForCloseCombatExpert(gs.friendlyCaptainAmerica.location, gs.enemyCaptainAmerica.location)) {
+                        if (gs.enemyCaptainAmerica.getDefenseValue() > gs.friendlyCaptainAmerica.getAttackValue() + 8);
+                        else if (gs.enemyCaptainAmerica.getDefenseValue() > gs.friendlyCaptainAmerica.getAttackValue() &&
+                            gs.enemyCaptainAmerica.getDefenseValue() <= gs.friendlyCaptainAmerica.getAttackValue() + 8)
+                        {
+                            result += "Use Close Combat Expert to add 2 to attack Captain America\n";
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        } else if (gs.enemyCaptainAmerica.getDefenseValue() > gs.friendlyCaptainAmerica.getAttackValue() &&
+                                    gs.enemyCaptainAmerica.getDefenseValue() <= gs.friendlyCaptainAmerica.getAttackValue() + 7)
+                        {
+                            result += "Use Close Combat Expert to add 1 to attack and 1 to damage Captain America\n";
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        } else {
+                            result += "Use Close Combat Expert to add 2 to damage Captain America\n";
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        }
+
+                    }
+                    // Check for close combat with enemy iron man
+                    if (!gs.enemyIronMan.isKOd() &&
+                        dfs.neighboringEnemyForCloseCombatExpert(gs.friendlyCaptainAmerica.location, gs.enemyIronMan.location)) {
+                        if (gs.enemyIronMan.getDefenseValue() > gs.enemyIronMan.getAttackValue() + 8);
+                        else if (gs.enemyIronMan.getDefenseValue() > gs.friendlyCaptainAmerica.getAttackValue() &&
+                            gs.enemyIronMan.getDefenseValue() <= gs.friendlyCaptainAmerica.getAttackValue() + 8)
+                        {
+                            result += "Use Close Combat Expert to add 2 to attack Iron Man\n";
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        } else if (gs.enemyIronMan.getDefenseValue() > gs.friendlyCaptainAmerica.getAttackValue() &&
+                                    gs.enemyIronMan.getDefenseValue() <= gs.friendlyCaptainAmerica.getAttackValue() + 7)
+                        {
+                            result += "Use Close Combat Expert to add 1 to attack and 1 to damage Iron Man\n";
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        } else {
+                            result += "Use Close Combat Expert to add 2 to damage to Iron Man\n";
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        }
+
+                    }
+                    // Check for close combat with enemy thor
+                    if (!gs.enemyThor.isKOd() &&
+                        dfs.neighboringEnemyForCloseCombatExpert(gs.friendlyCaptainAmerica.location, gs.enemyThor.location)) {
+                        if (gs.enemyThor.getDefenseValue() > gs.friendlyCaptainAmerica.getAttackValue() + 8);
+                        else if (gs.enemyThor.getDefenseValue() > gs.friendlyCaptainAmerica.getAttackValue() &&
+                            gs.enemyThor.getDefenseValue() <= gs.friendlyCaptainAmerica.getAttackValue() + 8)
+                        {
+                            result += "Use Close Combat Expert to add 2 to attack Thor\n";
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        } else if (gs.enemyThor.getDefenseValue() > gs.friendlyCaptainAmerica.getAttackValue() &&
+                                    gs.enemyThor.getDefenseValue() <= gs.friendlyCaptainAmerica.getAttackValue() + 7)
+                        {
+                            result += "Use Close Combat Expert to add 1 to attack and 1 to damage Thor\n";
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        } else {
+                            result += "Use Close Combat Expert to add 2 to damage Thor\n";
+                            JOptionPane.showMessageDialog(null, result);
+                            return;
+                        }
+
                     }
                 }
 
@@ -541,7 +615,7 @@ public class AI {
                     if (!tempEnemyCap.isKOd())
                     {
                         dfs.aStar(start, gs.enemyCaptainAmerica.location, gs.getBlockingLocations(false), false);
-                        for (int i = 1; i < gs.friendlyIronMan.getSpeedValue() / 2 -1; i++)
+                        for (int i = 0; i < gs.friendlyIronMan.getSpeedValue() / 2 -1; i++)
                         {
                             int dist = dfs.lineOfSight(dfs.route.get(i).getName(), gs.enemyCaptainAmerica.location,
                                                        gs.getBlockingLocations(true));
@@ -553,15 +627,15 @@ public class AI {
                                           " and attack Captain America\n";
 
                                 // Energy Explosion on cap
-                                /*if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Energy Explosion"))
+                                if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Energy Explosion"))
                                 {
                                     if (dfs.neighboringAllEnemy(targetLoc, gs.enemyIronMan.location,
                                                                 gs.enemyThor.location))
                                     {
                                         result += "Use Energy Explosion to deal 2 damage to all enemies adjacent\n";
                                     }
-                                }*/
-
+                                }
+                                
                                 JOptionPane.showMessageDialog(null, result);
                                 return;
                             }
@@ -572,7 +646,7 @@ public class AI {
                     if (!tempEnemyIronMan.isKOd())
                     {
                         dfs.aStar(start, gs.enemyIronMan.location, gs.getBlockingLocations(false), false);
-                        for (int i = 1; i < gs.friendlyIronMan.getSpeedValue() / 2 -1; i++)
+                        for (int i = 0; i < gs.friendlyIronMan.getSpeedValue() / 2 -1; i++)
                         {
                             int dist = dfs.lineOfSight(dfs.route.get(i).getName(), gs.enemyIronMan.location,
                                                        gs.getBlockingLocations(true));
@@ -583,7 +657,7 @@ public class AI {
                                 result += "Use Running Shot to move to " + dfs.route.get(i).getName() +
                                           " and attack Ironman\n";
 
-                                /*// Energy Explosion on ironman
+                                // Energy Explosion on iron man
                                 if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Energy Explosion"))
                                 {
                                     if (dfs.neighboringAllEnemy(targetLoc, gs.enemyCaptainAmerica.location,
@@ -591,7 +665,7 @@ public class AI {
                                     {
                                         result += "Use Energy Explosion to deal 2 damage to all enemies adjacent\n";
                                     }
-                                }*/
+                                }
 
                                 JOptionPane.showMessageDialog(null, result);
                                 return;
@@ -603,7 +677,7 @@ public class AI {
                     if (!tempEnemyThor.isKOd())
                     {
                         dfs.aStar(start, gs.enemyThor.location, gs.getBlockingLocations(false), false);
-                        for (int i = 1; i < gs.friendlyIronMan.getSpeedValue() / 2 -1; i++)
+                        for (int i = 0; i < gs.friendlyIronMan.getSpeedValue() / 2 -1; i++)
                         {
                             int dist = dfs.lineOfSight(dfs.route.get(i).getName(), gs.enemyThor.location,
                                                        gs.getBlockingLocations(true));
@@ -614,7 +688,7 @@ public class AI {
                                 result += "Use Running Shot to move to " + dfs.route.get(i).getName() +
                                           " and attack Thor\n";
 
-                                /*// Energy Explosion on thor
+                                // Energy Explosion on Thor
                                 if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Energy Explosion"))
                                 {
                                     if (dfs.neighboringAllEnemy(targetLoc, gs.enemyCaptainAmerica.location,
@@ -622,7 +696,7 @@ public class AI {
                                     {
                                         result += "Use Energy Explosion to deal 2 damage to all enemies adjacent\n";
                                     }
-                                }*/
+                                }
 
                                 JOptionPane.showMessageDialog(null, result);
                                 return;
@@ -631,25 +705,24 @@ public class AI {
                     }
                 }
 
-
-                // Close Combat Expert (Find target first)
-                if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Close Combat Expert")) {
+                // Ranged Combat Expert (Find target first)
+                if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Ranged Combat Expert")) {
                     if (!tempEnemyCap.isKOd() && losCaptain == 1) {
                         if (tempEnemyCap.getDefenseValue() > gs.friendlyIronMan.getAttackValue() + 8);
                         else if (tempEnemyCap.getDefenseValue() > gs.friendlyIronMan.getAttackValue() &&
                             tempEnemyCap.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() + 8)
                         {
-                            result += "Use Close Combat Expert to add 2 to attack Captain America\n";
+                            result += "Use Ranged Combat Expert to add 2 to attack Captain America\n";
                             JOptionPane.showMessageDialog(null, result);
                             return;
                         } else if (tempEnemyCap.getDefenseValue() > gs.friendlyIronMan.getAttackValue() &&
                                  tempEnemyCap.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() + 7)
                         {
-                            result += "Use Close Combat Expert to add 1 to attack and 1 to damage Captain America\n";
+                            result += "Use Ranged Combat Expert to add 1 to attack and 1 to damage Captain America\n";
                             JOptionPane.showMessageDialog(null, result);
                             return;
                         } else {
-                            result += "Use Close Combat Expert to add 2 to damage Captain America\n";
+                            result += "Use Ranged Combat Expert to add 2 to damage Captain America\n";
                             JOptionPane.showMessageDialog(null, result);
                             return;
                         }
@@ -659,17 +732,17 @@ public class AI {
                         else if (tempEnemyIronMan.getDefenseValue() > gs.friendlyIronMan.getAttackValue() &&
                                  tempEnemyIronMan.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() + 8)
                         {
-                            result += "Use Close Combat Expert to add 2 to attack Ironman\n";
+                            result += "Use Ranged Combat Expert to add 2 to attack Ironman\n";
                             JOptionPane.showMessageDialog(null, result);
                             return;
                         } else if (tempEnemyIronMan.getDefenseValue() > gs.friendlyIronMan.getAttackValue() &&
                                  tempEnemyIronMan.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() + 7)
                         {
-                            result += "Use Close Combat Expert to add 1 to attack and 1 to damage Ironman\n";
+                            result += "Use Ranged Combat Expert to add 1 to attack and 1 to damage Ironman\n";
                             JOptionPane.showMessageDialog(null, result);
                             return;
                         } else {
-                            result += "Use Close Combat Expert to add 2 to damage Ironman\n";
+                            result += "Use Ranged Combat Expert to add 2 to damage Ironman\n";
                             JOptionPane.showMessageDialog(null, result);
                             return;
                         }
@@ -679,40 +752,36 @@ public class AI {
                         else if (tempEnemyThor.getDefenseValue() > gs.friendlyIronMan.getAttackValue() &&
                                  tempEnemyThor.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() + 8)
                         {
-                            result += "Use Close Combat Expert to add 2 to attack Thor\n";
+                            result += "Use Ranged Combat Expert to add 2 to attack Thor\n";
                             JOptionPane.showMessageDialog(null, result);
                             return;
                         } else if (tempEnemyThor.getDefenseValue() > gs.friendlyIronMan.getAttackValue() &&
                                  tempEnemyThor.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() + 7)
                         {
-                            result += "Use Close Combat Expert to add 1 to attack and 1 to damage Thor\n";
+                            result += "Use Ranged Combat Expert to add 1 to attack and 1 to damage Thor\n";
                             JOptionPane.showMessageDialog(null, result);
                             return;
                         } else
                         {
-                            result += "Use Close Combat Expert to add 2 to damage Thor\n";
+                            result += "Use Ranged Combat Expert to add 2 to damage Thor\n";
                             JOptionPane.showMessageDialog(null, result);
                             return;
                         }
                     }
-                    return;
                 }
 
                 // General Attack
-                if (tempEnemyCap.isKOd() &&
-                    tempEnemyCap.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() &&
+                if (!tempEnemyCap.isKOd() &&
                     losCaptain > 0 && losCaptain <= gs.friendlyIronMan.getRangeValue()) {
                     result += "Attack Captain America\n";
                     JOptionPane.showMessageDialog(null, result);
                     return;
-                } else if (tempEnemyIronMan.isKOd() &&
-                           tempEnemyIronMan.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() &&
+                } else if (!tempEnemyIronMan.isKOd() &&
                            losIronman > 0 && losIronman <= gs.friendlyIronMan.getRangeValue()) {
                     result += "Attack Ironman\n";
                     JOptionPane.showMessageDialog(null, result);
                     return;
-                } else if (tempEnemyThor.isKOd() &&
-                           tempEnemyThor.getDefenseValue() <= gs.friendlyIronMan.getAttackValue() &&
+                } else if (!tempEnemyThor.isKOd() &&
                            losThor > 0 && losThor <= gs.friendlyIronMan.getRangeValue()) {
                     result += "Attack Thor\n";
                     JOptionPane.showMessageDialog(null, result);
@@ -721,15 +790,8 @@ public class AI {
 
                 // TODO: Sidestep (idk if it matters too much)
 
-                /*// TODO: Invulnerability
-                if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Invulnerability")) {
-                    result += "-2 Damage taken (Invulnerability)";
-                }
-                // TODO: Toughness
-                if (Arrays.asList(gs.friendlyIronMan.getActivePower()).contains("Toughness")) {
-                    result += "-1 Damage taken (Toughness)";
-                }*/
-
+                // Note from Prof:
+                // Invulnerability and Toughness don't need to be in the AI, just roll for them
                 // Move to enemy
 
                 // Make sure no one is ko'd, if they are pass a huge number for clickNum so it is not chosen
@@ -774,8 +836,8 @@ public class AI {
                 updateGameStateFromGUI();
                 System.out.println("Thor Button Pressed");
                 
-                // If they have 2 action tokens, do nothing and rest. Don't 'push' and take damage
-                if (gs.friendlyThor.actionTokens >= 2) {
+                // Do nothing and rest. Don't 'push' and take damage
+                if (gs.friendlyThor.actionTokens >= 1) {
                     JOptionPane.showMessageDialog(null, "Thor should do nothing to clear his action tokens");
                     return;
                 }
