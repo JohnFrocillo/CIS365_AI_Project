@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -204,6 +205,83 @@ public class DFS {
     }
 
     /**
+     * Finds walls surrounding a tile on the map.
+     * This ignores going out of range on the map because it would be the same outcome regardless
+     * @param x node to check
+     * @param neighbors a list of the node x's neighbors
+     * @return flag integer where bit 3 thru 0 represent walls on top then going around clockwise
+     *  (bit three is top wall, bit 2 is right wall, etc...)
+     */
+    private int findWalls(Node x, ArrayList<Node> neighbors) {
+        int flags = 0;
+        if (!neighbors.contains(new Node("" + ((char)(x.getX() + 65)) + (x.getY() + 1 - 1)))) {
+            flags |= 8;
+        }
+        if (!neighbors.contains(new Node("" + ((char)(x.getX() + 65 + 1)) + (x.getY() + 1)))) {
+            flags |= 4;
+        }
+        if (!neighbors.contains(new Node("" + ((char)(x.getX() + 65)) + (x.getY() + 1 + 1)))) {
+            flags |= 2;
+        }
+        if (!neighbors.contains(new Node("" + ((char)(x.getX() + 65 - 1)) + (x.getY() + 1)))) {
+            flags |= 1;
+        }
+        return flags;
+    }
+
+    /**
+     * Check whether a line intersects with a surrounding wall on a tile
+     * @param x node to check intersection on
+     * @param slope slope of the euclidean vector from point a to b
+     * @param intercept intercept of the euclidean vector from point a to b
+     * @return True if there is an intersection, False otherwise.
+     */
+    private boolean checkWallIntersection(Node x, double slope, double intercept) {
+
+        if (Math.abs(slope) == 1) return false;
+
+        int walls = findWalls(x, findNeighbours(adjacency_matrix, x));
+
+        double leftLineY = slope * ((double)x.getX() - .5) + intercept;
+        double rightLineY = slope * ((double)x.getX() + .5) + intercept;
+
+        System.out.println(x.getName() + " -------------------------- ");
+        System.out.println("Slope: " + slope + " Intercept: " + intercept + " Walls: " + walls);
+        System.out.println("Left: " + leftLineY + " Right: " + rightLineY);
+        System.out.println("Ly: " + leftLineY + " Ry: " + rightLineY + " Ny: " + x.getY());
+
+        // Top wall intersection
+        if ((walls & 8) != 0 &&
+            ((double)x.getY() - .5 > rightLineY ||
+            (double)x.getY() - .5 > leftLineY)) {
+            return true;
+        }
+
+        // Right wall intersection
+        if ((walls & 4) != 0 &&
+            (double)x.getY() - .5 <= rightLineY &&
+            (double)x.getY() + .5 >= rightLineY) {
+            return true;
+        }
+
+        // Bottom wall intersection
+        if ((walls & 2) != 0 &&
+            ((double)x.getY() + .5 < rightLineY ||
+            (double)x.getY() + .5 < leftLineY)) {
+            return true;
+        }
+
+        // Left wall intersection
+        if ((walls & 1) != 0 &&
+            (double)x.getY() - .5 <= leftLineY &&
+            (double)x.getY() + .5 >= leftLineY) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Wrapper for a Line of Sight calculator
      * @param a Name of starting square on map
      * @param b Name of ending square on map
@@ -233,6 +311,9 @@ public class DFS {
         dx = b.getX() - a.getX();
         dy = b.getY() - a.getY();
 
+        double slope = (double)dy / (double)dx;
+        double intersept = a.getY() - slope * a.getX();
+
         if (dy < 0) {
             dy = -dy;
             incY = -1;
@@ -253,12 +334,30 @@ public class DFS {
         if (dx > dy) {
             int error = dy - (dx / 2);
             int x = a.getX(), y = a.getY();
+
+            if (checkWallIntersection(
+                new Node("" + (char) (x + 65) + (y + 1)),
+                slope, intersept))
+                return -1;
+
             while (x != b.getX()) {
                 x += incX;
+
                 if (error >= 0) {
                     y += incY;
                     error -= dx;
+
+                    if (checkWallIntersection(
+                        new Node("" + (char) (x + 65) + (y + 1)),
+                        slope, intersept))
+                        return -1;
                 }
+
+                if (checkWallIntersection(
+                    new Node("" + (char) (x + 65) + (y + 1)),
+                    slope, intersept))
+                    return -1;
+
                 error += dy;
                 distance++;
 
@@ -286,14 +385,30 @@ public class DFS {
         } else {
             int error = dx - (dy / 2);
             int x = a.getX(), y = a.getY();
+
+            if (checkWallIntersection(
+                new Node("" + (char) (x + 65) + (y + 1)),
+                slope, intersept))
+                return -1;
+
             while (y != b.getY()) {
                 if (error >= 0) {
                     x += incX;
                     error -= dy;
+
+                    if (checkWallIntersection(
+                        new Node("" + (char) (x + 65) + (y + 1)),
+                        slope, intersept))
+                        return -1;
                 }
                 y += incY;
                 error += dx;
                 distance++;
+
+                if (checkWallIntersection(
+                    new Node("" + (char) (x + 65) + (y + 1)),
+                    slope, intersept))
+                    return -1;
 
                 // Check if next tile in line is a neighbor of the current node.
                 boolean         found     = false;
@@ -917,10 +1032,10 @@ public class DFS {
     public static void main(String[] args) {
         DFS dfs = new DFS();
 
-        Node s = new Node("A2");
-        Node e = new Node("A1");
+        Node s = new Node("E7");
+        Node e = new Node("G9");
         ArrayList<String> loc = new ArrayList<>();
-        loc.add("B2");
+        //loc.add("B2");
 
         goal = e.getName();
 

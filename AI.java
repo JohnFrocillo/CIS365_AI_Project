@@ -773,14 +773,37 @@ public class AI {
                 // Use GameState object gs to access and update data
                 updateGameStateFromGUI();
                 System.out.println("Thor Button Pressed");
-                
+
+                DFS dfs = new DFS();
+                String result = "";
+                String start = gs.friendlyIronMan.location;
+
+                String target, targetLoc;
+
+                int losCaptain = dfs.lineOfSight(start, gs.enemyCaptainAmerica.location, gs.getBlockingLocations(true));
+                int losIronman = dfs.lineOfSight(start, gs.enemyIronMan.location, gs.getBlockingLocations(true));
+                int losThor = dfs.lineOfSight(start, gs.enemyThor.location, gs.getBlockingLocations(true));
+
+                CaptainAmerica tempEnemyCap = new CaptainAmerica();
+                tempEnemyCap.clickNumber = gs.enemyCaptainAmerica.clickNumber;
+                IronMan tempEnemyIronMan = new IronMan();
+                tempEnemyIronMan.clickNumber = gs.enemyIronMan.clickNumber;
+                Thor tempEnemyThor = new Thor();
+                tempEnemyThor.clickNumber = gs.enemyThor.clickNumber;
+
                 // If they have 2 action tokens, do nothing and rest. Don't 'push' and take damage
-                if (gs.friendlyThor.actionTokens >= 2) {
+                if (gs.friendlyThor.actionTokens >= 1) {
                     JOptionPane.showMessageDialog(null, "Thor should do nothing to clear his action tokens");
                     return;
                 }
                 // If in range of an enemy, attack!
+                else if (losCaptain > -1 && losCaptain < gs.friendlyThor.getRangeValue()) {
 
+                } else if (losIronman > -1 && losIronman < gs.friendlyThor.getRangeValue()) {
+
+                } else if (losThor > -1 && losThor < gs.friendlyThor.getRangeValue()) {
+
+                }
                 // If out of range, get as close as possible using A*
             }
         });
