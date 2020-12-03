@@ -187,6 +187,24 @@ public class DFS {
     }
 
     /**
+     * Generates a route in text form for display
+     * @return string of concatenated nodes along route
+     */
+    public String routeToString() {
+        String out = "";
+        for (int i = 0; i < route.size(); i++) {
+            if (i == 0) {
+                out += "(" + route.get(i).getName() + ") -> ";
+            } else if (i == route.size() - 1) {
+                out += "(" + route.get(i).getName() + ")\n";
+            } else {
+                out += route.get(i).getName() + " -> ";
+            }
+        }
+        return out;
+    }
+
+    /**
      * Checks if a node has water.
      * @param n node to check
      * @return true if node has water on it.
