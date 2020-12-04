@@ -13,6 +13,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class AI {
@@ -51,26 +52,26 @@ public class AI {
     JLabel enemyThorActionTokensLabel = new JLabel("Enter Enemy Thor # Action Tokens:");
     
     // The fields that need to be filled out for the AI to make a decision
-    JTextField friendlyCaptainAmericaLocation = new JTextField("--------");
-    JTextField friendlyCaptainAmericaClickNumber = new JTextField("--------");
-    JTextField friendlyCaptainAmericaActionTokens = new JTextField("--------");
-    JTextField enemyCaptainAmericaLocation = new JTextField("--------");
-    JTextField enemyCaptainAmericaClickNumber = new JTextField("--------");
-    JTextField enemyCaptainAmericaActionTokens = new JTextField("--------");
+    JTextField friendlyCaptainAmericaLocation = new JTextField("--------", 3);
+    JTextField friendlyCaptainAmericaClickNumber = new JTextField("--------", 3);
+    JTextField friendlyCaptainAmericaActionTokens = new JTextField("--------", 3);
+    JTextField enemyCaptainAmericaLocation = new JTextField("--------", 3);
+    JTextField enemyCaptainAmericaClickNumber = new JTextField("--------", 3);
+    JTextField enemyCaptainAmericaActionTokens = new JTextField("--------", 3);
 
-    JTextField friendlyIronManLocation = new JTextField("--------");
-    JTextField friendlyIronManClickNumber = new JTextField("--------");
-    JTextField friendlyIronManActionTokens = new JTextField("--------");
-    JTextField enemyIronManLocation = new JTextField("--------");
-    JTextField enemyIronManClickNumber = new JTextField("--------");
-    JTextField enemyIronManActionTokens = new JTextField("--------");
+    JTextField friendlyIronManLocation = new JTextField("--------", 3);
+    JTextField friendlyIronManClickNumber = new JTextField("--------", 3);
+    JTextField friendlyIronManActionTokens = new JTextField("--------", 3);
+    JTextField enemyIronManLocation = new JTextField("--------", 3);
+    JTextField enemyIronManClickNumber = new JTextField("--------", 3);
+    JTextField enemyIronManActionTokens = new JTextField("--------", 3);
 
-    JTextField friendlyThorLocation = new JTextField("--------");
-    JTextField friendlyThorClickNumber = new JTextField("--------");
-    JTextField friendlyThorActionTokens = new  JTextField("--------");
-    JTextField enemyThorLocation = new JTextField("--------");
-    JTextField enemyThorClickNumber = new JTextField("--------");
-    JTextField enemyThorActionTokens = new JTextField("--------");
+    JTextField friendlyThorLocation = new JTextField("--------", 3);
+    JTextField friendlyThorClickNumber = new JTextField("--------", 3);
+    JTextField friendlyThorActionTokens = new  JTextField("--------", 3);
+    JTextField enemyThorLocation = new JTextField("--------", 3);
+    JTextField enemyThorClickNumber = new JTextField("--------", 3);
+    JTextField enemyThorActionTokens = new JTextField("--------", 3);
 
     // For pulling current stats
     JTextArea capStats = new JTextArea("Speed: ---\nAttack: ---\nDefense: ---\nRange: ---\nDamage Value: ---\nPower 1: ---\nPower 2: ---\nPower 3: ---\n");
@@ -78,8 +79,8 @@ public class AI {
     JTextArea thorStats = new JTextArea("Speed: ---\nAttack: ---\nDefense: ---\nRange: ---\nDamage Value: ---\nPower 1: ---\nPower 2: ---\nPower 3: ---\n");
 
     // Additional information
-    JLabel heavyObjectLocationLabel = new JLabel("Heavy Object Location:");
-    JTextField heavyObjectLocation = new JTextField("--------");
+    ArrayList<JLabel>     hObjectLocLabels = new ArrayList<>();
+    ArrayList<JTextField> hObjLocs         = new ArrayList<>();
 
     public AI() {
         // create the frame for the GUI
@@ -241,12 +242,22 @@ public class AI {
         panel.add(thorStats, c);
 
         // Add the object location to the panel
-        c.gridx = 2;
         c.gridy = 9;
-        panel.add(heavyObjectLocationLabel, c);
-        c.gridx = 3;
-        c.gridy = 9;
-        panel.add(heavyObjectLocation, c);
+        for (int k = 0; k < 2; k++)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                c.gridx = i * 2;
+                JLabel     l = new JLabel("Heavy Object " + (i + 1 + 3 * k) + " Location");
+                JTextField t = new JTextField("", 3);
+                hObjectLocLabels.add(l);
+                hObjLocs.add(t);
+                panel.add(l, c);
+                c.gridx = i * 2 + 1;
+                panel.add(t, c);
+            }
+            c.gridy++;
+        }
 
         // Add the panel to the frame
         frame.add(panel);
@@ -1154,7 +1165,11 @@ public class AI {
         gs.friendlyThor.clickNumber = Integer.parseInt(friendlyThorClickNumber.getText());
         gs.friendlyThor.actionTokens = Integer.parseInt(friendlyThorActionTokens.getText());
         // object
-        gs.heavyObjectLocation = heavyObjectLocation.getText();
+        int i = 0;
+        for (JTextField loc : hObjLocs) {
+            gs.heavyObjectLocations[i] = loc.getText();
+            i++;
+        }
         updateStatsField();
     }
 
@@ -1184,41 +1199,53 @@ public class AI {
         friendlyThorClickNumber.setText("1");
         friendlyThorActionTokens.setText("0");
 
-        heavyObjectLocation.setText("D5");
+        for (JTextField text : hObjLocs) {
+            text.setText("");
+        }
+
         updateGameStateFromGUI();
     }
 
     private void updateStatsField() {
-        String capStr = "Speed: " + gs.friendlyCaptainAmerica.getSpeedValue() + "\n" +
-                        "Attack: " + gs.friendlyCaptainAmerica.getAttackValue() + "\n" +
-                        "Defense: " + gs.friendlyCaptainAmerica.getDefenseValue() + "\n" +
-                        "Range: " + gs.friendlyCaptainAmerica.getRangeValue() + "\n" +
-                        "Damage Value: " + gs.friendlyCaptainAmerica.getDamageValue() + "\n" +
-                        "Power 1: " + gs.friendlyCaptainAmerica.getActivePower()[0] + "\n" +
-                        "Power 2: " + gs.friendlyCaptainAmerica.getActivePower()[1] + "\n" +
-                        "Power 3: " + gs.friendlyCaptainAmerica.getActivePower()[2] + "\n";
+        if (!gs.friendlyCaptainAmerica.isKOd())
+        {
+            String capStr = "Speed: " + gs.friendlyCaptainAmerica.getSpeedValue() + "\n" +
+                            "Attack: " + gs.friendlyCaptainAmerica.getAttackValue() + "\n" +
+                            "Defense: " + gs.friendlyCaptainAmerica.getDefenseValue() + "\n" +
+                            "Range: " + gs.friendlyCaptainAmerica.getRangeValue() + "\n" +
+                            "Damage Value: " + gs.friendlyCaptainAmerica.getDamageValue() + "\n" +
+                            "Power 1: " + gs.friendlyCaptainAmerica.getActivePower()[0] + "\n" +
+                            "Power 2: " + gs.friendlyCaptainAmerica.getActivePower()[1] + "\n" +
+                            "Power 3: " + gs.friendlyCaptainAmerica.getActivePower()[2] + "\n";
+            capStats.setText(capStr);
+        } else capStats.setText("Captain America is KOed");
 
-        String ironManStr = "Speed: " + gs.friendlyIronMan.getSpeedValue() + "\n" +
-                            "Attack: " + gs.friendlyIronMan.getAttackValue() + "\n" +
-                            "Defense: " + gs.friendlyIronMan.getDefenseValue() + "\n" +
-                            "Range: " + gs.friendlyIronMan.getRangeValue() + "\n" +
-                            "Damage Value: " + gs.friendlyIronMan.getDamageValue() + "\n" +
-                            "Power 1: " + gs.friendlyIronMan.getActivePower()[0] + "\n" +
-                            "Power 2: " + gs.friendlyIronMan.getActivePower()[1] + "\n" +
-                            "Power 3: " + gs.friendlyIronMan.getActivePower()[2] + "\n";
-        
-        String thorStr = "Speed: " + gs.friendlyThor.getSpeedValue() + "\n" +
-                        "Attack: " + gs.friendlyThor.getAttackValue() + "\n" +
-                        "Defense: " + gs.friendlyThor.getDefenseValue() + "\n" +
-                        "Range: " + gs.friendlyThor.getRangeValue() + "\n" +
-                        "Damage Value: " + gs.friendlyThor.getDamageValue() + "\n" +
-                        "Power 1: " + gs.friendlyThor.getActivePower()[0] + "\n" +
-                        "Power 2: " + gs.friendlyThor.getActivePower()[1] + "\n" +
-                        "Power 3: " + gs.friendlyThor.getActivePower()[2] + "\n";
+        if (!gs.friendlyIronMan.isKOd())
+        {
+            String ironManStr = "Speed: " + gs.friendlyIronMan.getSpeedValue() + "\n" +
+                                "Attack: " + gs.friendlyIronMan.getAttackValue() + "\n" +
+                                "Defense: " + gs.friendlyIronMan.getDefenseValue() + "\n" +
+                                "Range: " + gs.friendlyIronMan.getRangeValue() + "\n" +
+                                "Damage Value: " + gs.friendlyIronMan.getDamageValue() + "\n" +
+                                "Power 1: " + gs.friendlyIronMan.getActivePower()[0] + "\n" +
+                                "Power 2: " + gs.friendlyIronMan.getActivePower()[1] + "\n" +
+                                "Power 3: " + gs.friendlyIronMan.getActivePower()[2] + "\n";
+            ironManStats.setText(ironManStr);
+        } else capStats.setText("Ironman is KOed");
 
-        capStats.setText(capStr);
-        ironManStats.setText(ironManStr);
-        thorStats.setText(thorStr);
+        if (!gs.friendlyThor.isKOd())
+        {
+            String thorStr = "Speed: " + gs.friendlyThor.getSpeedValue() + "\n" +
+                             "Attack: " + gs.friendlyThor.getAttackValue() + "\n" +
+                             "Defense: " + gs.friendlyThor.getDefenseValue() + "\n" +
+                             "Range: " + gs.friendlyThor.getRangeValue() + "\n" +
+                             "Damage Value: " + gs.friendlyThor.getDamageValue() + "\n" +
+                             "Power 1: " + gs.friendlyThor.getActivePower()[0] + "\n" +
+                             "Power 2: " + gs.friendlyThor.getActivePower()[1] + "\n" +
+                             "Power 3: " + gs.friendlyThor.getActivePower()[2] + "\n";
+
+            thorStats.setText(thorStr);
+        } else capStats.setText("Thor is KOed");
     }
 
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GameState {
 
@@ -18,7 +19,7 @@ public class GameState {
     public int friendlyPoints;
     public int enemyPoints;
 
-    public String heavyObjectLocation;
+    public String[] heavyObjectLocations = new String[6];
 
     // Keep track of walls that are broken
         //Ex: "A1-A2" Wall between A1 and A2 is gone
@@ -44,13 +45,13 @@ public class GameState {
             list.add(friendlyIronMan.location);
             list.add(friendlyThor.location);
         }
-        //TODO:
-        //FIXME: this is causing an issue. They won't attack when they clearly can; just move to their same spot
-        // So for now it is commented out
+
         list.add(enemyCaptainAmerica.location);
         list.add(enemyIronMan.location);
         list.add(enemyThor.location);
-        list.add(heavyObjectLocation);
+        for (String loc : heavyObjectLocations) {
+            if (!loc.equals("")) list.add(loc);
+        }
         return list;
     }
 
