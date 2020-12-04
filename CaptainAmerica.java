@@ -7,6 +7,9 @@ public class CaptainAmerica {
     // empty constructor. Change or overload if needed
     public CaptainAmerica(){}
 
+    /**
+     * @return True if Captain America is KOed. Otherwise false.
+     */
     public boolean isKOd() {
         if (clickNumber > 6 || clickNumber < 0)
             return true;
@@ -15,6 +18,10 @@ public class CaptainAmerica {
     }
 
     // Based on the card in Project Appendix
+
+    /**
+     * @return Speed value based on Cards for Captain America based on click.
+     */
     public int getSpeedValue() {
 
         // can only clear tokens this turn. Not possible to get a third token.
@@ -39,7 +46,9 @@ public class CaptainAmerica {
         }
     }
 
-    // Based on the card in Project Appendix
+    /**
+     * @return Attack value based on Cards for Captain America based on click.
+     */
     public int getAttackValue() {
         switch (clickNumber) {
             case 1:
@@ -60,44 +69,43 @@ public class CaptainAmerica {
         }
     }
 
-    // Based on the card in Project Appendix
+    /**
+     * @return Defense value based on Cards for Captain America based on click.
+     */
     public int getDefenseValue() {
         switch (clickNumber) {
             case 1:
-                return 17;
             case 2:
-                return 17;
             case 3:
-                return 17;
-            case 4:
-                return 16;
-            case 5:
-                return 16;
             case 6:
                 return 17;
+            case 4:
+            case 5:
+                return 16;
             default:
                 //return 0 to imply they are KO'd
                 return 0;
         }
     }
 
-    // Based on the card in Project Appendix
+    /**
+     * @return Range value based on Cards for Captain America.
+     */
     public int getRangeValue() {
         return 5;
     }
 
+    /**
+     * @return Damage value based on Cards for Captain America based on click.
+     */
     public int getDamageValue() {
         switch (clickNumber) {
             case 1:
-                return 3;
             case 2:
-                return 3;
             case 3:
                 return 3;
             case 4:
-                return 2;
             case 5:
-                return 2;
             case 6:
                 return 2;
             default:
@@ -106,7 +114,9 @@ public class CaptainAmerica {
         }
     }
 
-    // Based on the card in Project Appendix
+    /**
+     * @return Powers based on Cards for Captain America based on click.
+     */
     public String[]  getActivePower() {
         switch (clickNumber) {
             case 1:

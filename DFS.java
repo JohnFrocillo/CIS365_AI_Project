@@ -1,23 +1,32 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Scanner;
 import java.util.Stack;
 
 public class DFS {
 
     static ArrayList<Node> nodesList = new ArrayList<>();
     public static String goal;
+    ArrayList<Node> route;
+
     // instantiate matrix
     private int adjacency_matrix[][] = new int[256][256];
     private boolean water_tiles[] = new boolean[256];
 
     // find neighbors of node using adjacency matrix
     // if adjacency_matrix[i][j]==1, then nodes at index i and index j are connected
+
+    /**
+     * Find the neighboring nodes to node x.
+     * @param adjacency_matrix Adjacency matrix of the connected graph
+     * @param x Node to search for neighbors.
+     * @return List of all neighbors.
+     */
     public ArrayList<Node> findNeighbours(int adjacency_matrix[][], Node x) {
         int nodeIndex = -1;
 
+        // Find index of Node x in nodeList
+        // Corresponds to the index in the adjacency matrix
         ArrayList<Node> neighbours = new ArrayList<>();
         for (int i = 0; i < nodesList.size(); i++) {
             if (nodesList.get(i).equals(x)) {
@@ -26,6 +35,7 @@ public class DFS {
             }
         }
 
+        // Find all neighbors from adjacency matrix and find the respective node in the nodelist to add.
         if (nodeIndex != -1) {
             for (int j = 0; j < adjacency_matrix[nodeIndex].length; j++) {
                 if (adjacency_matrix[nodeIndex][j] == 1) {
@@ -36,7 +46,12 @@ public class DFS {
         return neighbours;
     }
 
-    // Recursive DFS
+    /**
+     * Recursive Depth First Search on the connected graph using {@link DFS#goal} as a target
+     * This is here for no reason ATM.
+     * @param adjacency_matrix Adjacency matrix of the connected graph
+     * @param node Node to start search from.
+     */
     public void dfs(int adjacency_matrix[][], Node node) {
 
         System.out.print(node.getName() + " ");
@@ -50,7 +65,11 @@ public class DFS {
         }
     }
 
-    // Iterative DFS using stack
+    /**
+     * Stack-based Depth First Search on the connected graph using {@link DFS#goal} as a target
+     * @param adjacency_matrix Adjacency matrix of the connected graph
+     * @param node Node to start search from
+     */
     public void dfsUsingStack(int adjacency_matrix[][], Node node) {
         Stack<Node> stack = new Stack<>();
         HashMap<String, String> trace = new HashMap<>();
@@ -144,11 +163,22 @@ public class DFS {
         return new ArrayList<>();
     }
 
+    /**
+     * A heuristic euclidean distance calculator for A*
+     * @param a segment node
+     * @param b segment node
+     * @return The euclidean distance from point a to b
+     */
     private int distance(Node a, Node b) {
         return (int)Math.sqrt((a.getX() - b.getX()) * (a.getX() - b.getX()) +
                               (a.getY() - b.getY()) * (a.getY() - b.getY()));
     }
 
+    /**
+     * Retrace route after A* finds the goal node
+     * @param n goal node after path is made to it.
+     * @return The complete path from goal to start nodes.
+     */
     private ArrayList<Node> retrace(Node n) {
         Node temp = n;
         ArrayList<Node> trace = new ArrayList<>();
@@ -162,6 +192,11 @@ public class DFS {
         return trace;
     }
 
+    /**
+     * Find the node with the lowest cost in a list.
+     * @param nodes list of nodes
+     * @return The lowest cost node
+     */
     private Node getLowestCost(ArrayList<Node> nodes) {
         Node min = nodes.get(0);
         for (Node n : nodes)
@@ -170,6 +205,10 @@ public class DFS {
         return min;
     }
 
+    /**
+     * Prints the adjacency matrix to the command line
+     * @param matrix adjacency matrix
+     */
     private static void printMatrix(int matrix[][]) {
         System.out.print("   ");
         for (int i = 0; i < 256; i++)
@@ -311,7 +350,8 @@ public class DFS {
     }
 
     /**
-     * A Line of Sight calculator using Bresenham's Line Generation Algorithm
+     * A Line of Sight calculator using Bresenham's Line Generation
+     * and linear algebra to assess the line of sight between 2 nodes.
      * Sources: https://www.geeksforgeeks.org/bresenhams-line-generation-algorithm/
      * https://csustan.csustan.edu/~tom/Lecture-Notes/Graphics/Bresenham-Line/Bresenham-Line.pdf
      * @param a starting node
@@ -471,7 +511,6 @@ public class DFS {
             if (n.getName().equals(loc1) || n.getName().equals(loc2)) count++;
         }
 
-        //return count >= 2;
         return count >= 1;
         // Only need 1 additional enemy to be adjacent, not all of them
     }
@@ -493,6 +532,9 @@ public class DFS {
         return count >= 1;
     }
 
+    /**
+     * Initializes adjacency matrix and node list for the map.
+     */
     public DFS() {
         nodesList = new ArrayList<>();
 
@@ -1047,8 +1089,13 @@ public class DFS {
         
     }
 
-    ArrayList<Node> route;
-    
+    /**
+     * A Wrapper for an AStar algorithm.
+     * @param start Start node name along route
+     * @param end goal node name on route
+     * @param objLocations objects on map that block the path of players
+     * @param water if true, consider water as a blocking obstacle, otherwise ignore water.
+     */
     public void aStar(String start, String end, ArrayList<String> objLocations, boolean water) {
         goal = end;
         // Find the node specified by the user to start the Algorithm at
@@ -1072,6 +1119,9 @@ public class DFS {
         });
     }
 
+    /**
+     * DFS testing main
+     */
     public static void main(String[] args) {
         DFS dfs = new DFS();
 

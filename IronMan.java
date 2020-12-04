@@ -7,6 +7,9 @@ public class IronMan {
     // empty constructor. Change or overload if needed
     public IronMan(){}
 
+    /**
+     * @return True if Ironman is KOed. Otherwise false.
+     */
     public boolean isKOd() {
         if (clickNumber > 7 || clickNumber < 0)
             return true;
@@ -14,7 +17,9 @@ public class IronMan {
             return false;
     }
 
-    // Based on the card in Project Appendix
+    /**
+     * @return Speed value based on Cards for Ironman based on click.
+     */
     public int getSpeedValue() {
 
         // can only clear tokens this turn. Not possible to get a third token.
@@ -39,21 +44,18 @@ public class IronMan {
         }
     }
 
-    // Based on the card in Project Appendix
+    /**
+     * @return Attack value based on Cards for Ironman based on click.
+     */
     public int getAttackValue() {
         switch (clickNumber) {
             case 1:
-                return 10;
             case 2:
-                return 10;
             case 3:
                 return 10;
             case 4:
-                return 9;
             case 5:
-                return 9;
             case 6:
-                return 9;
             case 7:
                 return 9;
             default:
@@ -62,7 +64,9 @@ public class IronMan {
         }
     }
 
-    // Based on the card in Project Appendix
+    /**
+     * @return Defense value based on Cards for Ironman based on click.
+     */
     public int getDefenseValue() {
         switch (clickNumber) {
             case 1:
@@ -85,25 +89,26 @@ public class IronMan {
         }
     }
 
-    // Based on the card in Project Appendix
+    /**
+     * @return Range value based on Cards for Ironman based on click.
+     */
     public int getRangeValue() {
         return 7;
     }
 
+    /**
+     * @return Damage value based on Cards for Ironman based on click.
+     */
     public int getDamageValue() {
         switch (clickNumber) {
             case 1:
                 return 4;
             case 2:
-                return 3;
             case 3:
                 return 3;
             case 4:
-                return 2;
             case 5:
-                return 2;
             case 6:
-                return 2;
             case 7:
                 return 2;
             default:
@@ -112,7 +117,9 @@ public class IronMan {
         }
     }
 
-    // Based on the card in Project Appendix
+    /**
+     * @return Powers based on Cards for Ironman based on click.
+     */
     public String[]  getActivePower() {
         switch (clickNumber) {
             case 1:

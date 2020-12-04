@@ -10,6 +10,9 @@ public class MovementMinMax {
     int enemyThorValue;
     int result;
 
+    /**
+     * Empty
+     */
     public MovementMinMax() {
         // Node value derived from:
         // value = (highest possible defense) - (enemy current defense) + (click number)
@@ -19,6 +22,10 @@ public class MovementMinMax {
         // we want the maximized number for this. That means they have a low defense and/or a high click number
     }
 
+    /**
+     * Initializes and runs a minmax algorithm on all enemy stats.
+     * Stores finished result in {@link MovementMinMax#result}
+     */
     public MovementMinMax(int enemyCaptainAmericaDefense, int enemyCaptainAmericaClickNumber,
                             int enemyIronManDefense, int enemyIronManClickNumber,
                             int enemyThorDefense, int enemyThorClickNumber) {

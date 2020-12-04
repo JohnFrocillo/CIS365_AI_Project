@@ -6,8 +6,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-//import jdk.javadoc.internal.tool.Start;
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -82,6 +80,9 @@ public class AI {
     ArrayList<JLabel>     hObjectLocLabels = new ArrayList<>();
     ArrayList<JTextField> hObjLocs         = new ArrayList<>();
 
+    /**
+     * Initialize all Objects, Actions, and GUI for application.
+     */
     public AI() {
         // create the frame for the GUI
         JFrame frame = new JFrame("Heroclix AI");
@@ -241,7 +242,7 @@ public class AI {
         c.gridy = 8;
         panel.add(thorStats, c);
 
-        // Add the object location to the panel
+        // Add the object locations to the panel
         c.gridy = 9;
         for (int k = 0; k < 2; k++)
         {
@@ -264,9 +265,9 @@ public class AI {
 
         // Display the GUI
         frame.setVisible(true);
-        //DELETE: Fill with test data
         fillTestData();
 
+        // Decision tree for Captain America.
         captainAmericaButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 DFS dfs = new DFS();
@@ -599,6 +600,7 @@ public class AI {
             }
         });
 
+        // Decision tree for Ironman.
         ironManButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Use the fields filled in to determine what iron man should do
@@ -900,6 +902,7 @@ public class AI {
             }
         });
 
+        // Decision tree for Thor.
         thorButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Use the fields filled in to determine what thor should do
@@ -1144,6 +1147,9 @@ public class AI {
         });
     }
 
+    /**
+     * Parse all the inputs on the GUI to update the game state.
+     */
     private void updateGameStateFromGUI() {
         gs = new GameState();
         // Captain America information
@@ -1177,6 +1183,9 @@ public class AI {
         AI ai = new AI();
     }
 
+    /**
+     * Fill the GUI fields with test data.
+     */
     private void fillTestData() {
         enemyCaptainAmericaLocation.setText("A5");
         enemyCaptainAmericaClickNumber.setText("1");
@@ -1206,6 +1215,9 @@ public class AI {
         updateGameStateFromGUI();
     }
 
+    /**
+     * Compile all the stats for each character to display based on click count
+     */
     private void updateStatsField() {
         if (!gs.friendlyCaptainAmerica.isKOd())
         {
@@ -1247,5 +1259,4 @@ public class AI {
             thorStats.setText(thorStr);
         } else capStats.setText("Thor is KOed");
     }
-
 }
